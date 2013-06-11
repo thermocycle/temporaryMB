@@ -59,13 +59,13 @@ equation
           lineColor={0,0,0},
           fillColor={135,135,135},
           fillPattern=FillPattern.Backward,
-          textString="side A"),
+          textString="A"),
         Text(
           extent={{20,-30},{60,-50}},
           lineColor={0,0,0},
           fillColor={135,135,135},
           fillPattern=FillPattern.Backward,
-          textString="side B"),
+          textString="B"),
         Text(
           extent={{-80,20},{80,-20}},
           lineColor={0,0,0},

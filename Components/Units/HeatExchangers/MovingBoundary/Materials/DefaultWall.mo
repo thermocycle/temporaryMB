@@ -1,7 +1,7 @@
 within Components.Units.HeatExchangers.MovingBoundary.Materials;
 record DefaultWall "Default properties (steel)"
   extends BaseClasses.BaseWallProperties(
-  cp = 1,
-  rho= 1,
-  lambda=1);
+  cp = 500,
+  rho= 7.83,
+  lambda=16.3);
 end DefaultWall;

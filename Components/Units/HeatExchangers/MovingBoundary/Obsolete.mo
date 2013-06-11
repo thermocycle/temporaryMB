@@ -24,7 +24,7 @@ package Obsolete "Old models"
       k_wall=baseWallProperties.lambda)
       annotation (Placement(transformation(extent={{-50,-10},{-30,10}})));
     replaceable
-      Components.Units.HeatExchangers.MovingBoundary.Materials.MetalWall
+      Components.Units.HeatExchangers.MovingBoundary.Materials.AluminumWall
                           baseWallProperties constrainedby
       BaseClasses.BaseWallProperties
       annotation (choicesAllMatching=true,Placement(transformation(extent={{-30,10},{-10,30}})));
