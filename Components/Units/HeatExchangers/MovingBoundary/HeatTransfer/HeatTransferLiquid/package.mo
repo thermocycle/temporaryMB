@@ -5,7 +5,7 @@ package HeatTransferLiquid "A collection of heat transfer correlations for subco
 
 
   annotation (Icon(graphics={        Ellipse(
-            extent={{-80,-20},{-20,-80}},
+            extent={{0,60},{60,0}},
             lineColor={0,0,0},
             fillPattern=FillPattern.Sphere)}));
 end HeatTransferLiquid;

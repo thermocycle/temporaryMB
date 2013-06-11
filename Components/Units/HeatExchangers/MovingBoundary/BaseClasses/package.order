@@ -1,6 +1,5 @@
 BaseGeometry
-SimpleGeometry
-PartialHeatTransferCorrelation
-BaseSection
-BaseCell
-BaseWall
+BaseFluidSegment
+BaseWallSegment
+BaseSegment
+BaseWallProperties
