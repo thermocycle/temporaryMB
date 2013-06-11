@@ -1,20 +1,20 @@
 within Components.Units.HeatExchangers.MovingBoundary;
-model WallSegmentL "Wall between two heat ports"
+model WallSegmentCut "Wall of variable length between two heat ports"
 
   // Geometry specification
-  parameter Modelica.SIunits.Area area_a = 1 "heat exchange area on side A"
-  annotation (Dialog(group="Geometry"));
-  parameter Modelica.SIunits.Area area_b = area_a
-    "heat exchange area on side B"
-  annotation (Dialog(group="Geometry"));
   parameter Modelica.SIunits.Length s_ab(displayUnit="mm") = 0.001
     "thickness, from A to B"
   annotation (Dialog(group="Geometry"));
+  parameter Modelica.SIunits.Length width = 0.1 "width of an equivalent plate"
+  annotation (Dialog(group="Geometry"));
+  // other geometric details, not parameters
+  input Modelica.SIunits.Length length "length of the current segment";
+  Modelica.SIunits.Area area_a = width*length "heat exchange area on side A";
+  Modelica.SIunits.Area area_b = area_a "heat exchange area on side B";
 
   // Thermal properties
-  parameter Modelica.SIunits.Mass m_wall = (area_a+area_b)/2.0 * s_ab * wallProperties.rho
-    "mass of the wall"
-  annotation (Dialog(group="Thermal properties"));
+  Modelica.SIunits.Mass m_wall = (area_a+area_b)/2.0 * s_ab * wallProperties.rho
+    "mass of the wall";
   replaceable
     Components.Units.HeatExchangers.MovingBoundary.Materials.DefaultWall
                           wallProperties constrainedby
@@ -72,4 +72,4 @@ equation
           fillColor={135,135,135},
           fillPattern=FillPattern.Backward,
           textString="%name")}));
-end WallSegmentL;
+end WallSegmentCut;
