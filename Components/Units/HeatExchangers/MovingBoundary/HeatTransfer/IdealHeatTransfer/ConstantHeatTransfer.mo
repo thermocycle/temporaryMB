@@ -2,8 +2,9 @@ within Components.Units.HeatExchangers.MovingBoundary.HeatTransfer.IdealHeatTran
 model ConstantHeatTransfer
   "ConstantHeatTransfer: Constant heat transfer coefficient"
   extends
-    Components.Units.HeatExchangers.MovingBoundary.BaseClasses.PartialHeatTransferCorrelation;
-  parameter SI.CoefficientOfHeatTransfer alpha0 "heat transfer coefficient";
+    Components.Units.HeatExchangers.MovingBoundary.BaseClasses.PartialConvectiveCorrelation;
+  parameter Modelica.SIunits.CoefficientOfHeatTransfer alpha0
+    "heat transfer coefficient";
 equation
   Q_flows = {alpha0*surfaceAreas[i]*(heatPorts[i].T - Ts[i])*nParallel for i in 1:n};
 
