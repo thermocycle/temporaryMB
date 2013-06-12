@@ -45,6 +45,7 @@ initial equation
 equation
   // Energy balance around lumped capacity
   m_wall*der(T_wall)*wallProperties.cp = port_a.Q_flow + port_b.Q_flow;
+
   port_a.Q_flow = wallProperties.lambda / (0.5*s_ab) * area_a * (port_a.T - T_wall);
   port_b.Q_flow = wallProperties.lambda / (0.5*s_ab) * area_b * (port_b.T - T_wall);
 

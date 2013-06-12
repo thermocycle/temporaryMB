@@ -26,7 +26,7 @@ package Examples "Examples for how to use the components from this package"
     equation
       connect(steel.port_b, alu.port_a) annotation (Line(
           points={{6.10623e-16,17},{6.10623e-16,8.5},{6.10623e-16,8.5},{
-              6.10623e-16,0},{6.10623e-16,0},{6.10623e-16,-17}},
+              6.10623e-16,0},{6.10623e-16,-17},{6.10623e-16,-17}},
           color={191,0,0},
           smooth=Smooth.None));
       connect(alu.port_b, cold.port) annotation (Line(
@@ -54,22 +54,37 @@ package Examples "Examples for how to use the components from this package"
       Modelica.Blocks.Sources.Sine sine(
         amplitude=50,
         freqHz=2,
-        offset=450)
+        offset=450,
+        startTime=0.1)
         annotation (Placement(transformation(extent={{-80,40},{-60,60}})));
       WallSegmentCut wall(length=sine1.y)
         annotation (Placement(transformation(extent={{-10,6},{10,26}})));
       Modelica.Blocks.Sources.Sine sine1(
         amplitude=0.1,
         freqHz=3,
-        phase=1.5707963267949,
-        offset=0.3)
+        offset=0.3,
+        phase=0,
+        startTime=0.1)
         annotation (Placement(transformation(extent={{20,40},{40,60}})));
       Modelica.Thermal.HeatTransfer.Sensors.HeatFlowSensor heatFlow annotation (
           Placement(transformation(
             extent={{-10,-10},{10,10}},
             rotation=-90,
             origin={0,-8})));
+
+    Modelica.SIunits.Heat Q0;
+    Modelica.SIunits.HeatFlowRate Q0_dot;
+    Modelica.SIunits.HeatFlowRate Q1_dot;
+    Modelica.SIunits.Velocity s1;
+    constant Modelica.SIunits.Temperature Tzero = 273.15;
+
     equation
+      Q0 = wall.m_wall*(wall.T_wall-Tzero)*wall.wallProperties.cp;
+      Q0_dot = der(Q0);
+      Q1_dot = wall.port_a.Q_flow + wall.port_b.Q_flow + Q0_dot;
+
+      s1 = der(wall.length);
+
       connect(sine.y, hot.T)                   annotation (Line(
           points={{-59,50},{-52,50},{-52,30},{-42,30}},
           color={0,0,127},
@@ -87,7 +102,10 @@ package Examples "Examples for how to use the components from this package"
           points={{-1.22629e-15,-18},{0,-18},{0,-30},{-20,-30}},
           color={191,0,0},
           smooth=Smooth.None));
-      annotation (Diagram(graphics));
+      annotation (Diagram(graphics), Documentation(info="<html>
+<p><h4><font color=\"#008000\">Illutsration of the energy conservation problem</font></h4></p>
+<p>The problem here is that the change in energy that is associated with the varying length does not appear in any of the equations. Simply plot Q0_dot and Q1_dot to see the imbalance. Q0_dot is the change of energy in the wall material and Q1_dot is the heat balance plus this change. Hence, Q1_dot should be zero at all times. </p>
+</html>"));
     end WallSegmentCut_tester;
 
     model WallSegmentCutFlow_tester
@@ -475,6 +493,10 @@ package Examples "Examples for how to use the components from this package"
      Modelica.SIunits.Length length1;
      Modelica.SIunits.Length length2;
 
+     Modelica.SIunits.Heat Q0;
+     Modelica.SIunits.Heat Q1;
+     Modelica.SIunits.Heat Q2;
+
       Modelica.Fluid.Sensors.Temperature temp12(redeclare package Medium =
             Medium)
         annotation (Placement(transformation(extent={{-60,60},{-52,66}})));
@@ -504,6 +526,10 @@ package Examples "Examples for how to use the components from this package"
       length0 = lengthGenerator0.y;
       length1 = lengthGenerator1.y;
       length2 = totalLength-length1-length0;
+
+      Q0 = wall11.m_wall*wall11.T_wall*wall11.wallProperties.cp;
+      Q1 = wall21.m_wall*wall21.T_wall*wall21.wallProperties.cp;
+      Q2 = wall31.m_wall*wall31.T_wall*wall31.wallProperties.cp;
 
       connect(ductA3.Wall_int, wall12.port_a)      annotation (Line(
           points={{-40,44.6},{-40,33}},
