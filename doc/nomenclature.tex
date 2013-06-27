@@ -1,0 +1,131 @@
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Dimensionless Groups (based on http://robert.mathmos.net/research/latex/rjwmath.sty)
+%  (All two letter command sequences, except for those names already
+%   used by LaTeX, and where we need to avoid ambiguity)
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\Bo}{\ensuremath{\operatorname{Bo}}}  % Bond
+\newcommand{\Ca}{\ensuremath{\operatorname{Ca}}}  % Capillary
+\newcommand{\De}{\ensuremath{\operatorname{De}}}  % Deborah
+\newcommand{\Ek}{\ensuremath{\operatorname{E}}}   % Ekman
+\newcommand{\Fr}{\ensuremath{\operatorname{Fr}}}  % Froude
+\newcommand{\Gr}{\ensuremath{\operatorname{Gr}}}  % Grashof
+\newcommand{\Le}{\ensuremath{\operatorname{Le}}}  % Lewis
+\newcommand{\Ma}{\ensuremath{\operatorname{Ma}}}  % Mach
+\newcommand{\Nu}{\ensuremath{\operatorname{Nu}}}  % Nusselt
+\newcommand{\Pe}{\ensuremath{\operatorname{Pe}}}  % Peclet
+\newcommand{\Pra}{\ensuremath{\operatorname{Pr}}} % Prandtl
+\newcommand{\Ra}{\ensuremath{\operatorname{Ra}}}  % Rayleigh
+\newcommand{\Rey}{\ensuremath{\operatorname{Re}}} % Reynolds
+\newcommand{\Ri}{\ensuremath{\operatorname{Ri}}}  % Richardson
+\newcommand{\Ro}{\ensuremath{\operatorname{Ro}}}  % Rossby
+\newcommand{\Sc}{\ensuremath{\operatorname{Sc}}}  % Schmidt
+\newcommand{\Sta}{\ensuremath{\operatorname{Sta}}}% Stanton
+\newcommand{\Ste}{\ensuremath{\operatorname{S}}}  % Stefan
+\newcommand{\Str}{\ensuremath{\operatorname{St}}} % Strouhal
+\newcommand{\Ta}{\ensuremath{\operatorname{Ta}}}  % Taylor
+\newcommand{\We}{\ensuremath{\operatorname{We}}}  % Weber
+\newcommand{\Wi}{\ensuremath{\operatorname{Wi}}}  % Weissenberg
+\newcommand{\Wo}{\ensuremath{\operatorname{Wo}}}  % Womersley
+%
+\newcommand{\Gz}{\ensuremath{\operatorname{Gz}}}  % Graetz
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Other things
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Upright pi command 
+%\providecommand{\upi}{\mathrm{\pi}}
+%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Overlap environments for math: http://math.arizona.edu/~aprl/publications/mathclap/
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% For comparison, the existing overlap macros:
+% \def\llap#1{\hbox to 0pt{\hss#1}}
+% \def\rlap#1{\hbox to 0pt{#1\hss}}
+\def\clap#1{\hbox to 0pt{\hss#1\hss}}
+\def\mathllap{\mathpalette\mathllapinternal}
+\def\mathrlap{\mathpalette\mathrlapinternal}
+\def\mathclap{\mathpalette\mathclapinternal}
+\def\mathllapinternal#1#2{%
+\llap{$\mathsurround=0pt#1{#2}$}}
+\def\mathrlapinternal#1#2{%
+\rlap{$\mathsurround=0pt#1{#2}$}}
+\def\mathclapinternal#1#2{%
+\clap{$\mathsurround=0pt#1{#2}$}}
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Glossaries 
+% Read this entry for details: http://www.latex-community.org/know-how/263-glossaries-nomenclature-lists-of-symbols-and-acronyms
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% First we define some entries for the normal glossary
+\newglossaryentry{L}{name={\ensuremath{L}},description={Length (\si{\metre})}}
+
+% Then we define some acronyms 
+\newacronym{MB}{MB}{moving boundary}
+
+% Next come the dimensionless numbers
+\newglossaryentry{Nu}{type=dimlessnumber,
+name={\Nu},
+description={Nusselt number: $\Nu = \frac{\text{Convection}}{\text{Conduction}} = \frac{hL}{k_f}$},  
+%text={\Nu},
+first={Nusselt number (\Nu)},
+plural={Nusselt numbers},
+firstplural={Nusselt numbers (\Nu)}}
+%
+\newglossaryentry{Rey}{type=dimlessnumber,
+name={\Rey},
+description={Reynolds number},
+%text={\Rey},
+first={Reynolds number (\Rey)},
+plural={Reynolds numbers},
+firstplural={Reynolds numbers (\Rey)}}
+%
+\newglossaryentry{Pr}{type=dimlessnumber,
+name={\Pr},
+description={Prandtl number},
+%text={\Pr},
+first={Prandtl number (\Pr)},
+plural={Prandtl numbers},
+firstplural={Prandtl numbers (\Pr)}}
+%
+\newglossaryentry{gr}{type=dimlessnumber,
+name={\Gr},
+description={Grashof number},
+%text={\Gr},
+first={Grashof number (\Gr)},
+plural={Grashof numbers},
+firstplural={Grashof numbers (\Gr)}}
+%
+\newglossaryentry{ra}{type=dimlessnumber,
+name={\Ra},
+description={Rayleigh number},
+%text={\Ra},
+first={Rayleigh number (\Ra)},
+plural={Rayleigh numbers},
+firstplural={Rayleigh numbers (\Ra)}}
+%
+\newglossaryentry{gz}{type=dimlessnumber,
+name={\Gz},
+description={Graetz number},
+%text={\Gz},
+first={Graetz number (\Gz)},
+plural={Graetz numbers},
+firstplural={Graetz numbers (\Gz)}}
+
+% And now the Greek symbols
+\newglossaryentry{pi}{type=greeksymbols,name={\ensuremath{\pi}},sort=pi,description={ratio of circumference of circle to its diameter}}
+
+% and subscripts
+\newglossaryentry{r}{type=subscripts,name={r},description={refrigerant, working fluid}}
+
+
+% Examples
+\newacronym[type=example_acronym]{example_ddye}{D$_{\text{dye}}$}{donor dye, ex. Alexa 488}
+\newacronym[type=example_acronym,description={\glslink{example_r0}{F\"{o}rster distance}}]{example_R0}{$R_{0}$}{F\"{o}rster distance}
+\newglossaryentry{example_r0}{type=example_glossary,name=\glslink{example_R0}{\ensuremath{R_{0}}},text=F\"{o}rster distance,description={F\"{o}rster distance, where 50\% ...}, sort=R}
+\newglossaryentry{example_kdeac}{type=example_glossary,name=\glslink{example_R0}{\ensuremath{k_{DEAC}}},text=$k_{DEAC}$, description={is the rate of deactivation from ... and emission)}, sort=k}
+\newglossaryentry{example_pi}{type=example_symbols,name={\ensuremath{\pi}},sort=pi,description={ratio of circumference of circle to its diameter}}
+
