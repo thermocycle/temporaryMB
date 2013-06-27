@@ -62,6 +62,10 @@
 
 % First we define some entries for the normal glossary
 \newglossaryentry{L}{name={\ensuremath{L}},description={Length (\si{\metre})}}
+\newglossaryentry{N}{name={\ensuremath{N}},description={Number of sections (ND)}}
+\newglossaryentry{h}{name={\ensuremath{h}},description={Heat transfer coefficient (\si{\watt\per\square\metre\per\kelvin})}}
+\newglossaryentry{v}{name={\ensuremath{v}},description={Velocity (\si{\metre\per\second})}}
+\newglossaryentry{c}{name={\ensuremath{c}},description={Specific heat capacity (\si{\joule\per\kilo\gram\per\kelvin})}}
 
 % Then we define some acronyms 
 \newacronym{MB}{MB}{moving boundary}
@@ -69,7 +73,7 @@
 % Next come the dimensionless numbers
 \newglossaryentry{Nu}{type=dimlessnumber,
 name={\Nu},
-description={Nusselt number: $\Nu = \frac{\text{Convection}}{\text{Conduction}} = \frac{hL}{k_f}$},  
+description={Nusselt number: $\frac{\text{convection}}{\text{conduction}} = \frac{\gls{h}\,\gls{L}}{\gls{lambda}}$},  
 %text={\Nu},
 first={Nusselt number (\Nu)},
 plural={Nusselt numbers},
@@ -77,19 +81,19 @@ firstplural={Nusselt numbers (\Nu)}}
 %
 \newglossaryentry{Rey}{type=dimlessnumber,
 name={\Rey},
-description={Reynolds number},
+description={Reynolds number: $\frac{\text{inertia}}{\text{viscosity}} = \frac{\gls{rho}\,\gls{v}\,\gls{L}}{\gls{mu}}$}, 
 %text={\Rey},
 first={Reynolds number (\Rey)},
 plural={Reynolds numbers},
 firstplural={Reynolds numbers (\Rey)}}
 %
-\newglossaryentry{Pr}{type=dimlessnumber,
-name={\Pr},
-description={Prandtl number},
-%text={\Pr},
-first={Prandtl number (\Pr)},
+\newglossaryentry{Pra}{type=dimlessnumber,
+name={\Pra},
+description={Prandtl number: $\frac{\text{viscous diffusion}}{\text{thermal diffusion}} = \frac{\gls{c}_{\gls{sub:p}}\,\gls{mu}}{\gls{lambda}}$},
+%text={\Pra},
+first={Prandtl number (\Pra)},
 plural={Prandtl numbers},
-firstplural={Prandtl numbers (\Pr)}}
+firstplural={Prandtl numbers (\Pra)}}
 %
 \newglossaryentry{gr}{type=dimlessnumber,
 name={\Gr},
@@ -117,9 +121,13 @@ firstplural={Graetz numbers (\Gz)}}
 
 % And now the Greek symbols
 \newglossaryentry{pi}{type=greeksymbols,name={\ensuremath{\pi}},sort=pi,description={ratio of circumference of circle to its diameter}}
+\newglossaryentry{rho}{type=greeksymbols,name={\ensuremath{\rho}},sort=rho,description={Density of a material or medium (\si{\kilo\gram\per\cubic\metre})}}
+\newglossaryentry{lambda}{type=greeksymbols,name={\ensuremath{\lambda}},sort=lambda,description={Thermal conductivity (\si{\watt\per\metre\per\kelvin})}}
+\newglossaryentry{mu}{type=greeksymbols,name={\ensuremath{\mu}},sort=mu,description={Dynamic viscosity (\si{\pascal\second})}}
 
 % and subscripts
-\newglossaryentry{r}{type=subscripts,name={r},description={refrigerant, working fluid}}
+\newglossaryentry{sub:r}{type=subscripts,name={r},description={refrigerant, working fluid}}
+\newglossaryentry{sub:p}{type=subscripts,name={\ensuremath{p}},description={at constant pressure}}
 
 
 % Examples

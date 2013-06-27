@@ -8,6 +8,7 @@
 
 %\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
 \usepackage[latin1]{inputenc}
+\usepackage[english]{babel}
 
 %%% Examples of Article customizations
 % These packages are optional, depending whether you want the features they provide.
@@ -51,13 +52,14 @@
 \renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
 
 %%% END Article customizations
-\usepackage{hyperref,siunitx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{siunitx,multicol}
 %\usepackage{natbib}
 \usepackage[
     %,style=altlist
     %,hypertoc=true
     %,hyper=true
-    %,number=none
+    ,nonumberlist
     ,acronym=true
     %,toc=true
     ,section=subsection
@@ -68,8 +70,6 @@
 \newglossary{dimlessnumber}{dimnu}{dimnb}{Dimensionless Numbers}
 \newglossary{greeksymbols}{grsym}{grsbl}{Greek Symbols}
 \newglossary{subscripts}{subsc}{subcr}{Subscripts}
-
-
 
 \newglossary{example_acronym}{exacr}{excro}{Example Acronyms}
 \newglossary{example_symbols}{exsym}{exsbl}{Example Greek Symbols}
@@ -104,33 +104,15 @@ Jorrit Wronski\\
 \include{nomenclature}
 \maketitle
 
-%======================================================================
-%      Glossary and acronyms
-%======================================================================
-%      \cleardoublepage
-%      \chapter*{Lists of Symbols and \glossaryname}
-%      Please note that the given units do not apply exclusively. In some cases, different units may be given close to the appearance of a symbol in text or calculation. 
-%      \renewcommand{\glossarypreamble}{Numbers in italic indicate primary definitions.}
-%      \printglossary[type=main]
-%      \renewcommand{\glossarypreamble}{Acronyms}
-%      \printglossary[type=greek]
-%      \printglossary[type=roman]
-%      \printglossary[type=script]
-%      \printglossary[type=acronym]
-%      \printglossary[type=symbolslist]
-%      \printglossary[type=symbolslist,style=mylist]
-%      \printglossary[type=characteristicnumbers,style=mylist]
-%      \printglossaries
-%      \printacronym
+\abstract{The authors present a new moving boundary model that was integrated into the ThermoCycle package written in the Modelica language. Focussing on a seamless integration with existing components, this new component allows to calculate dynamic heat transfer in an efficient and robust way covering the full range of possible operating points in the liquid, two-phase, gas and supercritical domain. A basic validation performed with heat transfer data from two different experiments with evaporators shows that the model is able to reliably predict heat exchanger performance. The flexible implementation allows to compare different heat transfer correlations, which are made freely available as part of the ThermoCycle library. }
 
-\abstract{Test}
+\section{Introduction and Motivation}
 
-\section{Motivation}
+\Gls{MB} models are established tools to calculate heat exchanger performance in both steady-state and dynamic operation. A fictitious heat transfer channel is split up into different sections and with each section accounting for a different fluid state. In the case of an evaporator the maximum number of sections~\gls{N} is 3 for a)~subcooled, b)~two-phase and c)~superheated state. At higher pressures, the fluid might enter the supercritical state. Hence, there are four different sections out of which a maximum of three can occur simultaneously. The name \glsdesc{MB} is derived from the fact that the interfaces between these sections do not have a fixed spatial position but merely a fixed thermodynamic location depending on the presence of liquid and gaseous fluid, respectively. The actual existence of a certain section and its length are determined based on the fluid state resulting in variable sectioning. A fixed total length superimposes the required boundary condition to calculate the length of each section. 
+
+\Glsdesc{MB} formulations are a good compromise between computational efficiency, robustness and accuracy\cite{Bendapudi2008}. 
 
 
-Your text goes here.
-
-\Gls{MB} formulation based on \cite{Bendapudi2008}. 
 
 \section{Formulation}
 \subsection{Assumptions}
@@ -139,7 +121,7 @@ Your text goes here.
 
 \subsection{Heat Transfer}
 
-Based on \gls{Nu} for a characteristic length \gls{L}. Angles are usually calculated in radians or \gls{pi}.
+Based on \gls{Nu} from \gls{Rey} and \gls{Pra} for a characteristic length \gls{L}. Angles are usually calculated in radians or \gls{pi}.
 
 \subsection{Pressure Drop}
 
@@ -157,14 +139,15 @@ Compared to \cite{Kaern2011b}, the model ....
 \bibliographystyle{plain}
 \bibliography{references}
 
-\section{Examples for Nomenclature}
-When used the first time, the full description appears for acronyms: \gls{example_ddye}, \gls{example_R0}, \gls{example_r0}, \gls{example_kdeac}\\
+%\section{Examples for Nomenclature}
+%When used the first time, the full description appears for acronyms: \gls{example_ddye}, \gls{example_R0}, \gls{example_r0}, \gls{example_kdeac}\\
+%
+%Plural versions can be printed by \glspl{example_r0} and \glspl{example_kdeac}
+%Capital letters for sentence beginnings are available as well \Gls{example_ddye}
+%
+%.. and now we also use the symbols \gls{example_pi}.
 
-Plural versions can be printed by \glspl{example_r0} and \glspl{example_kdeac}
-Capital letters for sentence beginnings are available as well \Gls{example_ddye}
-
-.. and now we also use the symbols \gls{example_pi}.
-
+%\begin{multicols}{2}
 \setglossarysection{section} 
 \printglossary[type=main]
 \setglossarysection{subsection} 
@@ -172,6 +155,7 @@ Capital letters for sentence beginnings are available as well \Gls{example_ddye}
 \printglossary[type=dimlessnumber]
 \printglossary[type=greeksymbols]
 \printglossary[type=subscripts]
+%\end{multicols}
 
 %\section{Nomenclature}
 %\printindex
