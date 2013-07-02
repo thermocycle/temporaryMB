@@ -116,9 +116,348 @@ Jorrit Wronski\\
 
 \section{Formulation}
 \subsection{Assumptions}
-
+\begin{enumerate}
+\renewcommand{\theenumi}{\roman{enumi}}
+\item The tube is cylindrical
+\item The velocity of the fluid is uniform on the cross sectional area
+\item The enthalpy of the fluid is linear in each region of the tube (sub-cooled, two-phase, super-heated)
+\item Pressure is considered constant (at least for now)
+\item The secondary fluid is treated as an incompressible fluid
+\end{enumerate}
 \subsection{Equations}
+Thermodynamic properties are calculated using Coolprop \cite{Bell2013}. The state variable selected are $p$ and $\bar{h}$. The heat transfer coefficients ($U_\text{pf,1},U_\text{pf,2},U_\text{pf,3}$ - $U_\text{sf,1},U_\text{sf,2},U_\text{sf,3}$) are calculated using appropriate heat transfer models. Different model of void fraction ($\bar{\alpha}$) have been also implemented.\\
+\\
+\begin{center}
+{\bf SUB-COOLED ZONE}
+\end{center}
+{\bf Primary fluid} 
+\begin{center}
+\textit{Conservation equations}\\
+\end{center}
 
+
+\begin{flushleft}
+Mass balance\\
+\end{flushleft}
+\begin{equation}
+\text{A} [\text{L}_\text{1}  \cdot \frac{d \bar{\rho}_\text{1}}{d t} + (\bar{\rho}_\text{1} - \rho_\text{l}) \cdot \frac{d \text{L}_\text{1}}{d t}] = \dot{m}_\text{IN} -  \dot{m}_\text{A}
+\end{equation}
+
+\begin{flushleft}
+Energy balance\\
+\end{flushleft}
+\begin{equation}
+\text{A}\text{L}_\text{1}[\bar{\rho}_\text{1} \cdot \frac{d \bar{h}_\text{1}}{d t} + \bar{h}_\text{1} \cdot \frac{d \bar{\rho}_\text{1}}{d t}  -  \frac{d p_\text{1}}{d t}] + \text{A}(\bar{\rho}_\text{1}\bar{h}_\text{1} - \rho_\text{l}h_\text{l})\frac{d \text{L}_\text{1}}{d t} = \dot{m}_\text{IN}  \dot{h}_\text{IN} -  \dot{m}_\text{A} \dot{h}_\text{A} + \dot{Q}_\text{r1}
+\end{equation}
+
+\begin{equation}
+\frac{d \bar{\rho}_\text{1}}{d t} = [ \frac{\partial \bar{\rho}_\text{1}}{\partial p_\text{1}} + \frac{1}{2} \cdot \frac{\partial \bar{\rho}_\text{1}}{\partial \bar{h}_\text{1}} \cdot \frac{\partial h_\text{l}}{\partial p_\text{1}}] \frac{d p_\text{1}}{d t} + \frac{1}{2} \cdot \frac{\partial \bar{\rho}_\text{1}}{\partial \bar{h}_\text{1}}  \cdot \frac{d h_\text{IN}}{d t}
+\end{equation}
+
+
+\begin{equation}
+\frac{d \bar{h}_\text{1}}{d t} = \frac{1}{2} \cdot [\frac{\partial \bar{h}_\text{l}}{\partial p_\text{1}} \cdot \frac{d p_\text{1}}{d t} + \frac{d h_\text{IN}}{d t}]
+\end{equation}
+\\
+\begin{center}
+\textit{Constitutive equations}\\
+\end{center}
+
+\begin{equation}
+\bar{h}_\text{1} =  \frac{1}{2}(h_\text{IN} + {h}_\text{l})
+\end{equation}
+\begin{equation}
+subcool = setState\_ph(p_\text{1},\bar{h}_\text{1})
+\end{equation}
+
+\begin{equation}
+sat = setSat\_p(p_\text{2})
+\end{equation}
+\begin{equation}
+\rho_\text{l} = bubbleDensity(sat)
+\end{equation}
+\begin{equation}
+h_\text{l} = bubbleEnthalpy(sat)
+\end{equation}
+\begin{equation}
+\frac{\partial \bar{h}_\text{l}}{\partial p_\text{1}}= dBubbleEnthalpy\_dPressure(sat)
+\end{equation}
+\begin{equation}
+\frac{\partial \bar{\rho}_\text{1}}{\partial \bar{h}_\text{1}}= density\_derh\_p(subcool)
+\end{equation}
+\begin{equation}
+\frac{\partial \bar{\rho}_\text{1}}{\partial p_\text{1}}= density\_derp\_h(subcool)
+\end{equation}
+\begin{equation}
+\bar{T}_\text{1} = temperature(subcool)
+\end{equation}
+\begin{equation}
+\dot{Q}_\text{r,1} = \pi \text{D} \text{L}_\text{1} U_\text{pf,1} (T_\text{w,1} - \bar{T}_\text{1})
+\end{equation}
+
+%%%%%%%%%%%%% METAL WALL ZONE 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+{\bf Metal wall}\\
+\begin{center}
+\textit{Conservation equations}\\
+\end{center}
+
+Energy balance:\\
+
+\begin{equation}
+C_\text{w}(M_\text{tot} \cdot \frac{\text{L}_\text{1}}{\text{L}}) \cdot  \frac{d \text{T}_\text{w,1}}{d t} + \frac{M_\text{tot}}{\text{L}} (\text{T}_\text{w,1} - \text{T}_\text{w,12})  \frac{d \text{L}_\text{1}}{d t} = \dot{Q}_\text{sf,1} - \dot{Q}_\text{r,1}
+\end{equation}\\
+
+\begin{center}
+\textit{Constitutive equation}\\
+\end{center}
+\begin{equation}
+\text{T}_\text{w,12} = \frac{   \text{T}_\text{w,1} \text{L}_\text{2}  + \text{T}_\text{w,2}\text{L}_\text{1}      }{  \text{L}_\text{1} + \text{L}_\text{2}         } 
+\end{equation}
+
+\begin{equation}
+C_\text{w} = const.
+\end{equation}
+
+\begin{equation}
+M_\text{tot} = const.
+\end{equation}
+
+\begin{equation}
+L= const.
+\end{equation}
+
+%%%%%%%%% ZONE 1 SECONDARY FLUID  %%%%%%%%%%%%%%%%%%%%%5555
+{\bf Secondary fluid}\\
+\begin{center}
+\textit{Conservation equation}\\
+\end{center}
+
+
+Energy balance:\\
+\begin{equation}
+\rho_\text{sf} A_\text{sf} [\text{L}_\text{1} \cdot  \frac{d h_\text{sf,1}}{d t} +  (\text{h}_\text{sf,1} - \text{h}_\text{sf,12})  \frac{d \text{L}_\text{1}}{d t}] = \dot{m}_\text{sf} ({h}_\text{sf,in} - h_\text{sf,12} ) + \dot{Q}_\text{sf,1} 
+\end{equation}
+
+\begin{center}
+\textit{Constitutive equations}\\
+\end{center}
+\begin{equation}
+h_\text{sf,12} = \frac{   \text{h}_\text{sf,1} \text{L}_\text{2}  + \text{h}_\text{sf,2}\text{L}_\text{1}      }{  \text{L}_\text{1} + \text{L}_\text{2}         } 
+\end{equation}
+\begin{equation}
+{Q}_\text{sf,1} = = \pi \text{D} \text{L}_\text{1} U_\text{sf,1} (T_\text{w,1} - \bar{T}_\text{sf,1})
+\end{equation}
+\begin{equation}
+sfzone1 = setState(p1,h_{sf,1})
+\end{equation}
+\begin{equation}
+T_\text{sf,1} = temperature(sfzone1)
+\end{equation}\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%% TWO - PHASE ZONE (ZONE 2) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%  ZONE 2 PRIMARY FLUID %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+{\bf TWO-PHASE ZONE}
+\end{center}
+{\bf Primary fluid}\\
+\begin{center}
+\textit{Conservation equations}\\
+\end{center}
+Mass balance:\\
+\begin{equation}
+\text{A}[\text{L}_\text{2}  \cdot \frac{d \bar{\rho}_\text{2}}{d t} + (\bar{\rho}_\text{2} - \rho_\text{g}) \cdot \frac{d \text{L}_\text{2}}{d t} + (\rho_\text{l} - \rho_\text{g}) \cdot \frac{d \text{L}_\text{1}}{d t}] =  \dot{m}_\text{A} -  \dot{m}_\text{B}
+\end{equation}
+
+\begin{flushleft}
+Energy balance:\\
+\end{flushleft}
+\begin{equation}
+\text{A}[\text{L}_\text{2} \cdot  \frac{d \bar{\rho}_\text{2} \bar{h}_\text{2}}{d t} +  (\bar{\rho}_\text{2}\bar{h}_\text{2} - \rho_\text{g}h_\text{g}) \cdot \frac{d \text{L}_\text{2}}{d t}  +  (\rho_\text{l}h_\text{l} - \rho_\text{g}h_\text{g}) \cdot \frac{d \text{L}_\text{1}}{d t}       -   \text{L}_\text{2} \cdot  \frac{d p_\text{2}}{d t} ] =  \dot{m}_\text{A}  \dot{h}_\text{A} -  \dot{m}_\text{B} \dot{h}_\text{B} + \dot{Q}_\text{r,2}
+\end{equation}
+
+
+
+\begin{equation}
+\frac{d \bar{\rho}_\text{2}}{d t} = ( \frac{\partial \rho_\text{g}}{\partial p_\text{2}} \cdot \bar{\alpha} +  \frac{\partial \rho_\text{l}}{\partial p_\text{2}} \cdot  (1 - \bar{\alpha})) \cdot  \frac{d p_\text{2}}{d t} + (\rho_\text{g} - \rho_\text{l}) \cdot [\frac{\partial \bar{\alpha}}{\partial p_\text{2}} \cdot  \frac{d p_\text{2}}{d t} + \frac{\partial \bar{\alpha}}{\partial h_\text{OUT,alpha}} \cdot \frac{d h_\text{OUT,alpha}}{d t} ]
+\end{equation}
+
+
+\begin{equation} \begin{split}
+ \frac{d \bar{\rho}_\text{2} \bar{h}_\text{2}}{d t} &=  [\bar{\alpha} \cdot ( \frac{\partial \rho_\text{g}}{\partial p_\text{2}} \cdot h_\text{g} + \frac{\partial h_\text{g}}{\partial p_\text{2}} \cdot \rho_\text{g} )  + ( 1- \bar{\alpha}) \cdot (  \frac{\partial \rho_\text{l}}{\partial p_\text{2}} \cdot h_\text{l} + \frac{\partial h_\text{l}}{\partial p_\text{2}} \cdot \rho_\text{l} )] \cdot \frac{d p_\text{2}}{d t} \\+
+ &(\rho_\text{g}h_\text{g} - \rho_\text{l}h_\text{l}) \cdot  [\frac{\partial \bar{\alpha}}{\partial p_\text{2}} \cdot  \frac{d p_\text{2}}{d t} + \frac{\partial \bar{\alpha}}{\partial h_\text{OUT,alpha}} \cdot \frac{d h_\text{OUT,alpha}}{d t} ]
+\end{split}
+\end{equation}\\
+
+\begin{center}
+\textit{Constitutive equations}
+\end{center}
+\begin{equation}
+\bar{\rho}_\text{2} = \rho_\text{g} \bar{\alpha} + \rho_\text{l} \cdot (1 - \bar{\alpha})
+\end{equation}
+
+\begin{equation}
+\bar{\rho}_\text{2} \bar{h}_\text{2}= \rho_\text{g} h_\text{g} \bar{\alpha} + \rho_\text{l} h_\text{l} \cdot (1 - \bar{\alpha})
+\end{equation}
+
+\begin{equation}
+\rho_\text{g} = dewDensity(sat)
+\end{equation}
+\begin{equation}
+h_\text{g} = dewEnthalpy(sat)
+\end{equation}
+\begin{equation}
+\frac{\partial \bar{h}_\text{g}}{\partial p_\text{2}}= dDewEnthalpy\_dPressure(sat)
+\end{equation}
+
+\begin{equation}
+\bar{T}_\text{2} = temperature(sat)
+\end{equation}
+\begin{equation}
+\dot{Q}_\text{r,2} = \pi \text{D} \text{L}_\text{2} U_\text{pf,2} (T_\text{w,2} - \bar{T}_\text{2})
+\end{equation}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ZONE 2  METAL WALL %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{flushleft}
+{\bf Metal Wall}\\
+\end{flushleft}
+\begin{center}
+\textit{Conservation equation}
+\end{center}
+Energy balance:\\
+\begin{equation}
+C_\text{w} \cdot \frac{M_\text{tot}}{\text{L}} \cdot [\text{L}_\text{2} \cdot  \frac{d \text{T}_\text{w,2}}{d t} +  (\text{T}_\text{w,12} - \text{T}_\text{w,23})  \frac{d \text{L}_\text{1}}{d t} +  (\bar{\text{T}}_\text{2} - \text{T}_\text{w,23})  \frac{d \text{L}_\text{2}}{d t}] = \dot{Q}_\text{sf,2} - \dot{Q}_\text{r,2}
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  ZONE 2 SECONDARY FLUID  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{flushleft}
+{\bf Secondary fluid}\\
+\end{flushleft}
+\begin{center}
+\textit{Conservation equation}
+\end{center}
+Energy balance:
+\begin{equation}
+\rho_\text{sf} A_\text{sf} [\text{L}_\text{2} \cdot  \frac{d h_\text{sf,2}}{d t} +  (\text{h}_\text{sf,12} - \text{h}_\text{sf,23})  \frac{d \text{L}_\text{1}}{d t} (\text{h}_\text{sf,2} - \text{h}_\text{sf,23})  \frac{d \text{L}_\text{2}}{d t}] = \dot{m}_\text{sf} ({h}_\text{sf,12} - h_\text{sf,23} ) + \dot{Q}_\text{sf,1} 
+\end{equation}
+\begin{center}
+\textit{Constitutive equations}
+\end{center}
+
+\begin{equation}
+{Q}_\text{sf,2} = = \pi \text{D} \text{L}_\text{2} U_\text{sf,2} (T_\text{w,2} - \bar{T}_\text{sf,2})
+\end{equation}
+\begin{equation}
+sfzone2 = setState(p2,h_{sf,2})
+\end{equation}
+\begin{equation}
+\bar{T}_\text{sf,2} = temperature(sfzone2)
+\end{equation}\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SUPER - HEATED ZONE (ZONE 3) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+{\bf SUPER-HEATED ZONE}
+\end{center}
+
+
+{\bf Primary fluid}\\
+\begin{center}
+\textit{Conservation equations}\\
+\end{center}
+Mass balance:
+\begin{equation}
+\text{A} [\text{L}_\text{3}  \cdot \frac{d \bar{\rho}_\text{3}}{d t} + (\rho_\text{g} - \bar{\rho}_\text{3}) \cdot (\frac{d \text{L}_\text{1}}{d t} + \frac{d \text{L}_\text{2}}{d t})] = \dot{m}_\text{B} -  \dot{m}_\text{OUT}
+\end{equation}
+\begin{flushleft}
+Energy balance:
+\end{flushleft}
+\begin{equation}
+\text{A}\text{L}_\text{3}[\bar{\rho}_\text{3} \cdot \frac{d \bar{h}_\text{3}}{d t} + \bar{h}_\text{3} \cdot \frac{d \bar{\rho}_\text{3}}{d t}  -  \frac{d p_\text{3}}{d t}] + \text{A}(\rho_\text{g}h_\text{g} - \bar{\rho}_\text{3}\bar{h}_\text{3})\cdot (\frac{d \text{L}_\text{1}}{d t} + \frac{d \text{L}_\text{2}}{d t} ) = \dot{m}_\text{B}  \dot{h}_\text{g} -  \dot{m}_\text{OUT} \dot{h}_\text{OUT} + \dot{Q}_\text{r,3}
+\end{equation}
+
+
+\begin{equation}
+\frac{d \bar{\rho}_\text{3}}{d t} = [ \frac{\partial \bar{\rho}_\text{3}}{\partial p_\text{3}} + \frac{1}{2} \cdot \frac{\partial \bar{\rho}_\text{3}}{\partial \bar{h}_\text{3}} \cdot \frac{\partial \bar{h}_\text{g}}{\partial p_\text{3}}] \frac{d p_\text{3}}{d t} + \frac{1}{2} \cdot \frac{\partial \bar{\rho}_\text{3}}{\partial \bar{h}_\text{3}}  \cdot \frac{d h_\text{OUT}}{d t}
+\end{equation}
+
+
+\begin{equation}
+\frac{d \bar{h}_\text{3}}{d t} = \frac{1}{2} \cdot [\frac{\partial \bar{h}_\text{g}}{\partial p_\text{3}} \cdot \frac{d p_\text{3}}{d t} + \frac{d h_\text{OUT}}{d t}]
+\end{equation}\\
+
+\begin{center}
+\textit{Constitutive equations}\\
+\end{center}
+
+\begin{equation}
+vap = setState(p_\text{3},\bar{h}_\text{3})
+\end{equation}
+\begin{equation}
+\bar{h}_\text{3} = \frac{1}{2}(h_\text{g} - h_\text{OUT})
+\end{equation}
+\begin{equation}
+\frac{\partial \bar{\rho}_\text{3}}{\partial \bar{h}_\text{3}}= density\_derh\_p(vap)
+\end{equation}
+\begin{equation}
+\frac{\partial \bar{\rho}_\text{3}}{\partial p_\text{3}}= density\_derp\_h(vap)
+\end{equation}
+\begin{equation}
+\bar{T}_\text{3} = temperature(vap)
+\end{equation}
+\begin{equation}
+\dot{Q}_\text{r,3} = \pi \text{D} \text{L}_\text{3} U_\text{pf,3} (T_\text{w,3} - \bar{T}_\text{3})
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ZONE 3 METAL WALL  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Metal wall}\\
+\begin{center}
+\textit{Conservation equations}
+\end{center}
+Energy balance:
+\begin{equation}
+C_\text{w}\frac{M_\text{tot}}{L} \cdot [ \text{L}_\text{3} \cdot  \frac{d \text{T}_\text{w,3}}{d t} + (\text{T}_\text{w,23} - \text{T}_\text{w,3})  (\frac{d \text{L}_\text{1}}{d t} + \frac{d \text{L}_\text{2}}{d t})]= \dot{Q}_\text{sf,3} - \dot{Q}_\text{r,3}
+\end{equation}
+
+\begin{center}
+\textit{Constitutive equations}
+\end{center}
+
+\begin{equation}
+\text{T}_\text{w,23} = \frac{   \text{T}_\text{w,3} \text{L}_\text{2}  + \text{T}_\text{w,2}\text{L}_\text{3}      }{  \text{L}_\text{2} + \text{L}_\text{3}         } 
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ZONE 3 SECONDARY FLUID  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Secondary fluid}
+\begin{center}
+\textit{Conservation equations}
+\end{center}
+Energy balance:\\
+\begin{equation}
+\rho_\text{sf} A_\text{sf} [\text{L}_\text{3} \cdot  \frac{d \bar{h}_\text{sf,3}}{d t} +  (\text{h}_\text{sf,23} - \text{h}_\text{sf,3}) ( \frac{d \text{L}_\text{1}}{d t} + \frac{d \text{L}_\text{2}}{d t})] = \dot{m}_\text{sf} ({h}_\text{sf,23} - h_\text{sf,OUT} ) + \dot{Q}_\text{sf,3} 
+\end{equation}
+\begin{center}
+\textit{Constitutive equations}
+\end{center}
+
+\begin{equation}
+h_\text{sf,23} = \frac{   \text{h}_\text{sf,3} \text{L}_\text{2}  + \text{h}_\text{sf,2}\text{L}_\text{3}      }{  \text{L}_\text{2} + \text{L}_\text{3}         } 
+\end{equation}
+\begin{equation}
+{Q}_\text{sf,3} = = \pi \text{D} \text{L}_\text{3} U_\text{sf,3} (T_\text{w,3} - \bar{T}_\text{sf,3})
+\end{equation}
+\begin{equation}
+sfzone3 = setState(p3,h_{sf,3})
+\end{equation}
+\begin{equation}
+\bar{T}_\text{sf,3} = temperature(sfzone3)
+\end{equation}
 \subsection{Heat Transfer}
 
 Based on \gls{Nu} from \gls{Rey} and \gls{Pra} for a characteristic length \gls{L}. Angles are usually calculated in radians or \gls{pi}.
