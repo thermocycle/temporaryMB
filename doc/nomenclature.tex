@@ -62,10 +62,53 @@
 
 % First we define some entries for the normal glossary
 \newglossaryentry{L}{name={\ensuremath{L}},description={Length (\si{\metre})}}
-\newglossaryentry{N}{name={\ensuremath{N}},description={Number of sections (ND)}}
-\newglossaryentry{h}{name={\ensuremath{h}},description={Heat transfer coefficient (\si{\watt\per\square\metre\per\kelvin})}}
+\newglossaryentry{N}{name={\ensuremath{N}},description={Number of sections}}
+\newglossaryentry{U}{name={\ensuremath{U}},description={Heat transfer coefficient (\si{\watt\per\square\metre\per\kelvin})}}
 \newglossaryentry{v}{name={\ensuremath{v}},description={Velocity (\si{\metre\per\second})}}
 \newglossaryentry{c}{name={\ensuremath{c}},description={Specific heat capacity (\si{\joule\per\kilo\gram\per\kelvin})}}
+\newglossaryentry{A}{name={\ensuremath{A}},description={Area (\si{\square\metre})}}
+\newglossaryentry{m}{name={\ensuremath{m}},description={Mass (\si{\kilo\gram})}}
+\newglossaryentry{t}{name={\ensuremath{t}},description={Time (\si{\second})}}
+\newglossaryentry{Q}{name={\ensuremath{Q}},description={Heat (\si{\joule})}}
+
+\newglossaryentry{Qdot}{name={\ensuremath{\dot{Q}}},description={Heat flow (\si{\watt})}}
+\newglossaryentry{mdot}{name={\ensuremath{\dot{m}}},description={Mass flow (\si{\kilo\gram\per\second})}}
+
+\newglossaryentry{s}{name={\ensuremath{s}},description={Specific entropy (\si{\joule\per\kilo\gram\per\kelvin})}}
+\newglossaryentry{h}{name={\ensuremath{h}},description={Specific enthalpy (\si{\joule\per\kilo\gram})}}
+\newglossaryentry{T}{name={\ensuremath{T}},description={Temperature (\si{\kelvin})}}
+\newglossaryentry{p}{name={\ensuremath{p}},description={Pressure (\si{\pascal})}}
+
+\newglossaryentry{hbar}{name={\ensuremath{\bar{h}}},description={Average specific enthalpy (\si{\joule\per\kilo\gram})}}
+\newglossaryentry{Tbar}{name={\ensuremath{\bar{T}}},description={Average temperature (\si{\kelvin})}}
+
+% And now the Greek symbols
+\newglossaryentry{pi}{type=greeksymbols,name={\ensuremath{\pi}},sort=pi,description={ratio of circumference of circle to its diameter}}
+\newglossaryentry{rho}{type=greeksymbols,name={\ensuremath{\rho}},sort=rho,description={Density of a material or medium (\si{\kilo\gram\per\cubic\metre})}}
+\newglossaryentry{rhobar}{type=greeksymbols,name={\ensuremath{\bar{\rho}}},sort=rho,description={Average density (\si{\kilo\gram\per\cubic\metre})}}
+
+\newglossaryentry{lambda}{type=greeksymbols,name={\ensuremath{\lambda}},sort=lambda,description={Thermal conductivity (\si{\watt\per\metre\per\kelvin})}}
+\newglossaryentry{mu}{type=greeksymbols,name={\ensuremath{\mu}},sort=mu,description={Dynamic viscosity (\si{\pascal\second})}}
+\newglossaryentry{alpha}{type=greeksymbols,name={\ensuremath{\alpha}},sort=alpha,description={Void fraction}}
+\newglossaryentry{alphabar}{type=greeksymbols,name={\ensuremath{\bar{\alpha}}},sort=alpha,description={Average void fraction (ND)}}
+
+% and subscripts
+\newglossaryentry{sub:p}{type=subscripts,name={\ensuremath{p}},description={at constant pressure}}
+\newglossaryentry{sub:l}{type=subscripts,name={\ensuremath{\text{l}}},description={saturated liquid}}
+\newglossaryentry{sub:v}{type=subscripts,name={\ensuremath{\text{v}}},description={saturated vapour}}
+
+\newglossaryentry{sub:1}{type=subscripts,name={\ensuremath{1}},description={in zone 1}}
+\newglossaryentry{sub:2}{type=subscripts,name={\ensuremath{2}},description={in zone 2}}
+\newglossaryentry{sub:3}{type=subscripts,name={\ensuremath{3}},description={in zone 3}}
+\newglossaryentry{sub:12}{type=subscripts,name={\ensuremath{12}},description={at the interface of zone 1 and 2}}
+\newglossaryentry{sub:23}{type=subscripts,name={\ensuremath{23}},description={at the interface of zone 2 and 3}}
+
+\newglossaryentry{sub:in}{type=subscripts,name={\ensuremath{\text{in}}},description={at the inlet}}
+\newglossaryentry{sub:out}{type=subscripts,name={\ensuremath{\text{out}}},description={at the outlet}}
+
+\newglossaryentry{sub:pf}{type=subscripts,name={\ensuremath{\text{pf}}},description={primary fluid}}
+\newglossaryentry{sub:sf}{type=subscripts,name={\ensuremath{\text{sf}}},description={secondary fluid}}
+
 
 % Then we define some acronyms 
 \newacronym{MB}{MB}{moving boundary}
@@ -73,7 +116,7 @@
 % Next come the dimensionless numbers
 \newglossaryentry{Nu}{type=dimlessnumber,
 name={\Nu},
-description={Nusselt number: $\frac{\text{convection}}{\text{conduction}} = \frac{\gls{h}\,\gls{L}}{\gls{lambda}}$},  
+description={Nusselt number: $\frac{\text{convection}}{\text{conduction}} = \frac{\gls{U}\,\gls{L}}{\gls{lambda}}$},  
 %text={\Nu},
 first={Nusselt number (\Nu)},
 plural={Nusselt numbers},
@@ -118,16 +161,6 @@ description={Graetz number},
 first={Graetz number (\Gz)},
 plural={Graetz numbers},
 firstplural={Graetz numbers (\Gz)}}
-
-% And now the Greek symbols
-\newglossaryentry{pi}{type=greeksymbols,name={\ensuremath{\pi}},sort=pi,description={ratio of circumference of circle to its diameter}}
-\newglossaryentry{rho}{type=greeksymbols,name={\ensuremath{\rho}},sort=rho,description={Density of a material or medium (\si{\kilo\gram\per\cubic\metre})}}
-\newglossaryentry{lambda}{type=greeksymbols,name={\ensuremath{\lambda}},sort=lambda,description={Thermal conductivity (\si{\watt\per\metre\per\kelvin})}}
-\newglossaryentry{mu}{type=greeksymbols,name={\ensuremath{\mu}},sort=mu,description={Dynamic viscosity (\si{\pascal\second})}}
-
-% and subscripts
-\newglossaryentry{sub:r}{type=subscripts,name={r},description={refrigerant, working fluid}}
-\newglossaryentry{sub:p}{type=subscripts,name={\ensuremath{p}},description={at constant pressure}}
 
 
 % Examples
