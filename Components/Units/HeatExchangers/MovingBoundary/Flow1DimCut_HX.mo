@@ -110,8 +110,6 @@ parameter Modelica.SIunits.Pressure pstart "Fluid pressure start value"
     "Enthalpy state variable at outlet node";
   Real dMdt "Time derivative of mass in cell";
   Modelica.SIunits.HeatFlux qdot "heat flux at each cell";
- // Modelica.SIunits.CoefficientOfHeatTransfer U
- //   "Heat transfer coefficient between wall and working fluid";
   Real x "Vapor quality";
   Modelica.SIunits.SpecificEnthalpy h_l;
   Modelica.SIunits.SpecificEnthalpy h_v;
