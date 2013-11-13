@@ -221,5 +221,4 @@ initial equation
           lineColor={0,0,0},
           fillPattern=FillPattern.HorizontalCylinder,
           fillColor={0,127,255})}));
-
 end Flow1DimCut_HX;
