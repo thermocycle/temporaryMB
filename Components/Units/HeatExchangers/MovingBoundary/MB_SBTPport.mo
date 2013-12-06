@@ -1,5 +1,5 @@
 within Components.Units.HeatExchangers.MovingBoundary;
-model MB_SBTPport
+connector MB_SBTPport
 Modelica.SIunits.Temperature TwSB
     "wall mean temperature in the subcooled region";
 Modelica.SIunits.Temperature TwTP
@@ -9,8 +9,8 @@ flow Modelica.SIunits.Power QwSB "heat flow rate to the subcooled region";
 flow Modelica.SIunits.Power QwTP "heat flow rate to the two-phase region";
 
 // Think about it!!!
- Modelica.SIunits.Length L_SB "length of subcooled region";
- Modelica.SIunits.Length L_TP "length of subcooled region";
+output Modelica.SIunits.Length L_SB "length of subcooled region";
+output Modelica.SIunits.Length L_TP "length of subcooled region";
 //output Modelica.SIunits.Length Lb
 //    "total length of subcooled and two-phase regions";
 

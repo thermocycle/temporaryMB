@@ -121,7 +121,7 @@ Jorrit Wronski\\
 \item The velocity of the fluid is uniform on the cross sectional area
 \item The enthalpy of the fluid is linear in each region of the tube (sub-cooled, two-phase, super-heated)
 \item Pressure is considered constant (at least for now)
-\item The secondary fluid is treated as an incompressible fluid
+\item The secondary fluid is treated as an constant heat capacity fluid
 \end{enumerate}
 \subsection{Equations}
 Thermodynamic properties are calculated using Coolprop \cite{Bell2013}. The state variable selected are \gls{p} and \gls{hbar}. The heat transfer coefficients on primary side ($\gls{U}_{\gls{sub:pf},\gls{sub:1}}$,$\gls{U}_{\gls{sub:pf},\gls{sub:2}}$,$\gls{U}_{\gls{sub:pf},\gls{sub:3}}$) and secondary side ($\gls{U}_{\gls{sub:sf},\gls{sub:1}}$,$\gls{U}_{\gls{sub:sf},\gls{sub:2}}$,$\gls{U}_{\gls{sub:sf},\gls{sub:3}}$) are calculated using appropriate heat transfer models. Different model of void fraction \gls{alphabar} have been also implemented.\\
@@ -230,33 +230,7 @@ M_\text{tot} = const.
 L= const.
 \end{equation}
 
-%%%%%%%%% ZONE 1 SECONDARY FLUID  %%%%%%%%%%%%%%%%%%%%%5555
-{\bf Secondary fluid}\\
-\begin{center}
-\textit{Conservation equation}\\
-\end{center}
 
-
-Energy balance:\\
-\begin{equation}
-\rho_\text{sf} A_\text{sf} [\gls{L}_{\gls{sub:1}} \cdot  \frac{d h_\text{sf,1}}{d t} +  (\text{h}_\text{sf,1} - \text{h}_\text{sf,12})  \frac{d \gls{L}_{\gls{sub:1}}}{d t}] = \gls{mdot}_\text{sf} ({h}_\text{sf,in} - h_\text{sf,12} ) + \gls{Qdot}_\text{sf,1} 
-\end{equation}
-
-\begin{center}
-\textit{Constitutive equations}\\
-\end{center}
-\begin{equation}
-h_\text{sf,12} = \frac{   \text{h}_\text{sf,1} \gls{L}_{\gls{sub:2}}  + \text{h}_\text{sf,2}\gls{L}_{\gls{sub:1}}      }{  \gls{L}_{\gls{sub:1}} + \gls{L}_{\gls{sub:2}}         } 
-\end{equation}
-\begin{equation}
-{Q}_\text{sf,1} = = \pi \text{D} \gls{L}_{\gls{sub:1}} U_\text{sf,1} (T_\text{w,1} - \bar{T}_\text{sf,1})
-\end{equation}
-\begin{equation}
-sfzone1 = setState(p1,h_{sf,1})
-\end{equation}
-\begin{equation}
-T_\text{sf,1} = temperature(sfzone1)
-\end{equation}\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%% TWO - PHASE ZONE (ZONE 2) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -334,33 +308,10 @@ h_{\gls{sub:v}} = dewEnthalpy(sat)
 \end{center}
 Energy balance:\\
 \begin{equation}
-C_\text{w} \cdot \frac{M_\text{tot}}{\gls{L}} \cdot [\gls{L}_{\gls{sub:2}} \cdot  \frac{d \text{T}_\text{w,2}}{d t} +  (\text{T}_\text{w,12} - \text{T}_\text{w,23})  \frac{d \gls{L}_{\gls{sub:1}}}{d t} +  (\bar{\text{T}}_{\gls{sub:2}} - \text{T}_\text{w,23})  \frac{d \gls{L}_{\gls{sub:2}}}{d t}] = \gls{Qdot}_\text{sf,2} - \gls{Qdot}_\text{r,2}
+C_\text{w} \cdot \frac{M_\text{tot}}{\gls{L}} \cdot [\gls{L}_{\gls{sub:2}} \cdot  \frac{d \text{T}_\text{w,2}}{d t} +  (\text{T}_\text{w,12} - \text{T}_\text{w,23})  \frac{d \gls{L}_{\gls{sub:1}}}{d t} +  (\bar{\text{T}}_\text{w,2} - \text{T}_\text{w,23})  \frac{d \gls{L}_{\gls{sub:2}}}{d t}] = \gls{Qdot}_\text{sf,2} - \gls{Qdot}_\text{r,2}
 \end{equation}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  ZONE 2 SECONDARY FLUID  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{flushleft}
-{\bf Secondary fluid}\\
-\end{flushleft}
-\begin{center}
-\textit{Conservation equation}
-\end{center}
-Energy balance:
-\begin{equation}
-\gls{rho}_\text{sf} A_\text{sf} \left[\gls{L}_{\gls{sub:2}} \cdot  \frac{d h_\text{sf,2}}{d t} +  (\text{h}_\text{sf,12} - \text{h}_\text{sf,23})  \frac{d \gls{L}_{\gls{sub:1}}}{d t} (\text{h}_\text{sf,2} - \text{h}_\text{sf,23})  \frac{d \gls{L}_{\gls{sub:2}}}{d t}\right] = \gls{mdot}_\text{sf} ({h}_\text{sf,12} - h_\text{sf,23} ) + \gls{Qdot}_\text{sf,1} 
-\end{equation}
-\begin{center}
-\textit{Constitutive equations}
-\end{center}
 
-\begin{equation}
-{Q}_\text{sf,2} = = \pi \text{D} \gls{L}_{\gls{sub:2}} U_\text{sf,2} (T_\text{w,2} - \bar{T}_\text{sf,2})
-\end{equation}
-\begin{equation}
-sfzone2 = setState(p2,h_{sf,2})
-\end{equation}
-\begin{equation}
-\bar{T}_\text{sf,2} = temperature(sfzone2)
-\end{equation}\\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SUPER - HEATED ZONE (ZONE 3) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -436,37 +387,26 @@ C_\text{w}\frac{M_\text{tot}}{L} \cdot [ \gls{L}_{\gls{sub:3}} \cdot  \frac{d \t
 \text{T}_\text{w,23} = \frac{   \text{T}_\text{w,3} \gls{L}_{\gls{sub:2}}  + \text{T}_\text{w,2}\gls{L}_{\gls{sub:3}}      }{  \gls{L}_{\gls{sub:2}} + \gls{L}_{\gls{sub:3}}         } 
 \end{equation}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ZONE 3 SECONDARY FLUID  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-{\bf Secondary fluid}
-\begin{center}
-\textit{Conservation equations}
-\end{center}
-Energy balance:\\
-\begin{equation}
-\rho_\text{sf} A_\text{sf} [\gls{L}_{\gls{sub:3}} \cdot  \frac{d \gls{hbar}_\text{sf,3}}{d t} +  (\text{h}_\text{sf,23} - \text{h}_\text{sf,3}) ( \frac{d \gls{L}_{\gls{sub:1}}}{d t} + \frac{d \gls{L}_{\gls{sub:2}}}{d t})] = \gls{mdot}_\text{sf} ({h}_\text{sf,23} - h_\text{sf,OUT} ) + \gls{Qdot}_\text{sf,3} 
-\end{equation}
-\begin{center}
-\textit{Constitutive equations}
-\end{center}
 
-\begin{equation}
-h_\text{sf,23} = \frac{   \text{h}_\text{sf,3} \gls{L}_{\gls{sub:2}}  + \text{h}_\text{sf,2}\gls{L}_{\gls{sub:3}}      }{  \gls{L}_{\gls{sub:2}} + \gls{L}_{\gls{sub:3}}         } 
-\end{equation}
-\begin{equation}
-\gls{Q}_\text{sf,3} = \pi \text{D} \gls{L}_{\gls{sub:3}} \gls{U}_\text{sf,3} (\gls{T}_\text{w,3} - \gls{Tbar}_\text{sf,3})
-\end{equation}
-\begin{equation}
-sfzone3 = setState(p3,h_{sf,3})
-\end{equation}
-\begin{equation}
-\bar{T}_\text{sf,3} = temperature(sfzone3)
-\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% HEAT TRANSFER FORMULATION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Heat Transfer}
 
 Based on \gls{Nu} from \gls{Rey} and \gls{Pra} for a characteristic length \gls{L}. Angles are usually calculated in radians or \gls{pi}.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Pressure Drop FORMULATION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Pressure Drop}
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Results and Discussion %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results and Discussion}
 
 Compared to \cite{Kaern2011b}, the model .... 
@@ -478,8 +418,54 @@ Compared to \cite{Kaern2011b}, the model ....
 
 \section{Conclusion}
 
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%% SECONDARY FLUID %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Secondary fluid}
+
+The secondary fluid is treated as a constant heat capacity fluid. Two different method to solve the heat exchanger are developed. Newton law of cooling and epsilon-NTU.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% MODELING OF THE MOVING BOUNDARY MODEL IN MODELICA %%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Modelling}
+
+\subsection{Modelica Characteristics}
+
+\begin{itemize}
+\item Enthalpy controls switching
+\item Only length gets defined, no zones get disabled. Their respective length might be set to \num{e-10} though. 
+\item Solid wall with constant properties is included in the cell of the primary fluid. 
+\item Should length $L$ be treated as input, output or as a variable in the connectors?
+\item Implementation of heat transfer and void fractions models starting with \cite{Kaern2011b} and Sylvain's EES file.
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%% OLD SECONDARY FLUID FORMULATION %%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\include{OldSecondaryFluid}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%% BIBLIOGRAPHY %%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 \bibliographystyle{plain}
 \bibliography{references}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%% NOMENCLATURE %%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 %\section{Examples for Nomenclature}
 %When used the first time, the full description appears for acronyms: \gls{example_ddye}, \gls{example_R0}, \gls{example_r0}, \gls{example_kdeac}\\
@@ -502,22 +488,6 @@ Compared to \cite{Kaern2011b}, the model ....
 %\section{Nomenclature}
 %\printindex
 %\printglossaries
-
-\section{Modelling}
-
-\subsection{Modelica Characteristics}
-
-\begin{itemize}
-\item Enthalpy controls switching
-\item Only length gets defined, no zones get disabled. Their respective length might be set to \num{e-10} though. 
-\item Solid wall with constant properties is included in the cell of the primary fluid. 
-\item A secondary fluid is assumed to be incompressible, for now. This is our second component. 
-\item Should length $L$ be treated as input, output or as a variable in the connectors?
-\item Implementation of heat transfer and void fractions models starting with \cite{Kaern2011b} and Sylvain's EES file.
-\end{itemize}
-
-
-
 
 
 
