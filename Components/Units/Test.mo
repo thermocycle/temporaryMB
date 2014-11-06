@@ -1606,13 +1606,13 @@ package Test
           Tstart_inlet_sf=360 + 273.15,
           Tstart_outlet_sf=350 + 273.15,
           Discretization=ThermoCycle.Functions.Enumerations.Discretizations.upwind_AllowFlowReversal,
-
           V_sf=0.03142,
           V_wf=0.03142,
           A_sf=0.6283,
           A_wf=0.6283,
           pstart_wf=6000000)
           annotation (Placement(transformation(extent={{-38,-44},{10,4}})));
+
         ThermoCycle.Components.FluidFlow.Reservoirs.SourceCdot sourceCdot(
           rho=1000,
           Mdot_0=2,

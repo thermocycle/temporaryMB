@@ -3,15 +3,18 @@ model MBeva_Complete_NTU
   "Counter current Moving Boundary model: Fluid enters subcooled and exits in super-heated conditons. The model consider the fluid in one side and the metal wall. The secondary fluid is a constant specfic heat fluid"
 
 /**************** MEDIUM ***************************/
-replaceable package Medium = ThermoCycle.Media.R245faCool constrainedby
-    Modelica.Media.Interfaces.PartialMedium
+replaceable package Medium =
+      ExternalMedia.Media.BaseClasses.ExternalTwoPhaseMedium                        constrainedby
+    ExternalMedia.Media.BaseClasses.ExternalTwoPhaseMedium
 annotation (choicesAllMatching = true);
 
 /***************** PORTS ******************/
   ThermoCycle.Interfaces.Fluid.FlangeA InFlow( redeclare package Medium = Medium)
-    annotation (Placement(transformation(extent={{-108,-74},{-88,-54}})));
+    annotation (Placement(transformation(extent={{-110,-70},{-90,-50}}),
+        iconTransformation(extent={{-110,-70},{-90,-50}})));
   ThermoCycle.Interfaces.Fluid.FlangeB OutFlow( redeclare package Medium = Medium)
-    annotation (Placement(transformation(extent={{90,-74},{110,-54}})));
+    annotation (Placement(transformation(extent={{90,-70},{110,-50}}),
+        iconTransformation(extent={{90,-70},{110,-50}})));
   ThermoCycle.Interfaces.Fluid.Flange_ex_Cdot OutFlow_sf
     annotation (Placement(transformation(extent={{-110,50},{-90,70}})));
     ThermoCycle.Interfaces.Fluid.Flange_Cdot InFlow_sf
@@ -430,5 +433,139 @@ dhdt_SH = (1/2)*( dhdp_VS*der(p) + der(h_EX));
 
  //+ (Tsf_B - Tsf_SH)*(der(L_SB) + der(L_TP))) = Mdot_sf*cp_sf*(Tsf_SU - Tsf_B) - Qsf_SH;
 
-  annotation (Diagram(graphics));
+  annotation (Diagram(graphics), Icon(coordinateSystem(preserveAspectRatio=
+            false, extent={{-100,-100},{100,100}}),
+                                      graphics={
+        Rectangle(
+          extent={{-100,-20},{-32,-100}},
+          lineColor={60,121,182},
+          fillColor={0,128,255},
+          fillPattern=FillPattern.Solid),
+        Rectangle(
+          extent={{-100,20},{100,-20}},
+          lineColor={135,135,135},
+          fillPattern=FillPattern.CrossDiag),
+        Rectangle(
+          extent={{-100,100},{100,20}},
+          lineColor={135,135,135},
+          fillColor={255,85,85},
+          fillPattern=FillPattern.Solid),
+        Line(
+          points={{-100,60},{-80,40},{-60,60},{-40,40},{-20,60},{0,40},{20,60},
+              {40,40},{60,60},{80,40},{100,60}},
+          color={255,0,0},
+          smooth=Smooth.None,
+          thickness=0.5),
+        Polygon(
+          points={{-18,84},{-18,64},{-32,74},{-18,84}},
+          lineColor={0,0,0},
+          smooth=Smooth.None,
+          fillColor={0,0,0},
+          fillPattern=FillPattern.Solid),
+        Line(
+          points={{-18,74},{34,74}},
+          color={0,0,0},
+          smooth=Smooth.None,
+          thickness=0.5),
+        Ellipse(
+          extent={{-18,-72},{-10,-80}},
+          lineColor={85,170,255},
+          fillColor={0,128,255},
+          fillPattern=FillPattern.Solid),
+        Polygon(
+          points={{-100,-100},{40,-100},{-16,-20},{-100,-20},{-100,-24},{-100,-100}},
+          lineColor={0,128,255},
+          smooth=Smooth.None,
+          fillColor={0,128,255},
+          fillPattern=FillPattern.Solid),
+        Polygon(
+          points={{32,-100},{44,-100},{102,-100},{100,-20},{-16,-20},{32,-100}},
+          lineColor={170,255,255},
+          smooth=Smooth.None,
+          fillColor={170,255,255},
+          fillPattern=FillPattern.Solid),
+        Line(
+          points={{-101,-61},{-79,-41},{-61,-61},{-41,-41},{-21,-61},{-1,-41},{
+              19,-61},{39,-41},{59,-61},{79,-41},{99,-61}},
+          color={0,0,255},
+          smooth=Smooth.None,
+          thickness=0.5),
+        Ellipse(
+          extent={{4,-30},{12,-38}},
+          lineColor={85,170,255},
+          fillColor={0,128,255},
+          fillPattern=FillPattern.Solid),
+        Ellipse(
+          extent={{-2,-54},{6,-62}},
+          lineColor={0,128,255},
+          fillColor={0,128,255},
+          fillPattern=FillPattern.Solid),
+        Polygon(
+          points={{42,-70},{42,-90},{56,-80},{42,-70}},
+          lineColor={0,0,0},
+          smooth=Smooth.None,
+          fillColor={0,0,0},
+          fillPattern=FillPattern.Solid),
+        Line(
+          points={{-8,-80},{44,-80}},
+          color={0,0,0},
+          smooth=Smooth.None,
+          thickness=0.5),
+        Ellipse(
+          extent={{28,-28},{34,-34}},
+          lineColor={85,170,255},
+          fillColor={0,128,255},
+          fillPattern=FillPattern.Solid),
+        Ellipse(
+          extent={{-14,-26},{-2,-40}},
+          lineColor={0,128,255},
+          fillColor={0,128,255},
+          fillPattern=FillPattern.Solid),
+        Ellipse(
+          extent={{12,-64},{22,-76}},
+          lineColor={0,128,255},
+          fillColor={0,128,255},
+          fillPattern=FillPattern.Solid),
+        Ellipse(
+          extent={{26,-78},{38,-90}},
+          lineColor={0,128,255},
+          fillColor={0,128,255},
+          fillPattern=FillPattern.Solid),
+        Ellipse(
+          extent={{16,-42},{28,-54}},
+          lineColor={0,128,255},
+          fillColor={0,128,255},
+          fillPattern=FillPattern.Solid),
+        Ellipse(
+          extent={{36,-62},{42,-68}},
+          lineColor={0,128,255},
+          fillColor={0,128,255},
+          fillPattern=FillPattern.Solid)}),Documentation(info="<HTML>
+          
+         <p><big>Model <b>MBeva</b> is a moving boundaries heat exchanger model for evaporators.
+         The model considers a fictitius heat transfer channel split up into three different section based on the phase state of the working fluid:
+         <ul><li> Sub-cooled zone (SB)
+         <li> Two-phase zone (TP)
+         <li> SuperHeated zone (SH)
+         </ul>
+          <p><big><b>Pressure</b> and <b>enthalpy</b> are selected as state variables for each of the three zones. 
+          
+        <p><big>  The name moving boundary is derived from the fact that the interfaces between these sections do not
+have a fixed spatial position but merely a fixed thermodynamic location depending
+on the presence of liquid and gaseous fluid, respectively. The actual existence of
+a certain section and its length are determined based on the fluid state resulting
+in variable sectioning. A fixed total length superimposes the required boundary
+condition to calculate the length of each section.
+ 
+ <p><big>The assumptions for this model are:
+         <ul><li> The tube is cylindrical with a constant cross sectional area
+         <li> The velocity of the fluid is uniform on the cross sectional area
+         <li> The enthalpy of the fluid is linear in each region of the tube (sub-cooled, two-phase, super-heated)
+         <li> Pressure is considered constant
+         <li> Constant void fraction
+         <li> Thermal energy accumulation in the metal wall is taken into account
+         <li> The secondary fluid is treated as a constant heat capacity fluid
+         <li> The heat transfer between the secondary fluid and the metal wall and between the metal wall and the primary fluid is computed using the epsilon-NTU method
+         </ul>
+        </HTML>"));
 end MBeva_Complete_NTU;
