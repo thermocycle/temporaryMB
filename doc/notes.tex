@@ -252,12 +252,10 @@ A computationally efficient dynamic model for the two-phase region requires an a
 \begin{align}
 \frac{\partial \overline{\gamma}}{\partial p} =& + {
   \frac{\frac{d\rhop}{dp}}{\left( h_a-h_b \right) \left( \rhop-\rhopp \right)^2} 
-  \Lambda } \nonumber \\ 
-& - {
+  \Lambda } - {
   \frac{2 \rhop \left( \frac{d\rhop}{dp} - \frac{d\rhopp}{dp} \right)}{\left( h_a-h_b \right) \left( \rhop-\rhopp \right)^3} 
   \Lambda } \nonumber \\
-& + {
-  \frac{\rhop}{\left( h_a-h_b \right) \left( \rhop-\rhopp \right)^2} \left\lbrace{
+& + {\Psi\left(h_a-h_b\right) \left\lbrace{
     { \left( h_a-h_b \right) {\frac{d\rhop}{dp} } } + \frac{d\rhopp}{dp} 
   \Phi }\right. } \nonumber \\
 & \quad \left.{ + \rhopp \left[{
@@ -283,12 +281,10 @@ A computationally efficient dynamic model for the two-phase region requires an a
 \label{eqn:dgammabardpalt} \\
 %
 \frac{\partial \overline{\gamma}}{\partial h_a} =&
--{\Psi\Lambda} \nonumber \\ 
-&+{\Psi\left(h_a-h_b\right)\left\lbrace+\rhop+\rhopp\left(-1+{\frac{\left(\hp-\hpp\right)\left(\rhop-\rhopp\right)}{\rhop\left(h_a-\hp\right)+\rhopp\left(\hpp-h_a\right)}}\right)\right\rbrace} \label{eqn:dgammabardhaalt} \\
+-{\Psi\Lambda} + {\Psi\left(h_a-h_b\right)\left\lbrace+\rhop+\rhopp\left(-1+{\frac{\left(\hp-\hpp\right)\left(\rhop-\rhopp\right)}{\Gamma(h_a)}}\right)\right\rbrace} \label{eqn:dgammabardhaalt} \\
 %
 \frac{\partial \overline{\gamma}}{\partial h_b} =&
-+{\Psi\Lambda} \nonumber \\
-&+{\Psi\left(h_a-h_b\right)\left\lbrace-\rhop+\rhopp\left(+1-{\frac{\left(\hp-\hpp\right)\left(\rhop-\rhopp\right)}{\rhop\left(h_b-\hp\right)+\rhopp\left(\hpp-h_b\right)}}\right)\right\rbrace}\label{eqn:dgammabardhbalt} \\
++{\Psi\Lambda} + {\Psi\left(h_a-h_b\right)\left\lbrace-\rhop+\rhopp\left(+1-{\frac{\left(\hp-\hpp\right)\left(\rhop-\rhopp\right)}{\Gamma(h_b)}}\right)\right\rbrace}\label{eqn:dgammabardhbalt} \\
 %
 \text{ with } \Lambda =& (h_a-h_b)\rhop+\Phi\rhopp \\
 \Phi =& h_b-h_a+(\hp-\hpp)\ln\left(\frac{\Gamma(h_a)}{\Gamma(h_b)}\right) \\
