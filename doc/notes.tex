@@ -189,109 +189,98 @@ The $\overline{\gamma}$ obtained from Eq.~\ref{eqn:gammaBar} allows us to calcul
 \begin{equation}
 \overline{\rho} = (1-\overline{\gamma}) \rhop + \overline{\gamma} \rhopp \text{. }
 \end{equation}
-A computationally efficient dynamic model for the two-phase region requires an analytic derivative for the average void fraction. Please see Eq.~\label{eqn:dgammabardt} through Eq.~\label{eqn:dgammabardhb} for an expression of $d\overline{\gamma}/dt$ that is explicit in $p$, $h_a$ and $h_b$. 
+A computationally efficient dynamic model for the two-phase region requires an analytic derivative for the average void fraction. Please see Eq.~\ref{eqn:dgammabardt} through Eq.~\ref{eqn:dgammabardhb} for an expression of $d\overline{\gamma}/dt$ that is explicit in $p$, $h_a$ and $h_b$. 
 
-\begin{sidewaysfigure}
-\textbf{THIS GOES INTO THE APPENDIX}
+%\begin{sidewaysfigure}
+%\textbf{THIS GOES INTO THE APPENDIX}
+%\begin{align}
+%\frac{d\overline{\gamma}}{dt}  =& + \frac{\partial \overline{\gamma}}{\partial p}\frac{dp}{dt} + \frac{\partial \overline{\gamma}}{\partial h_a}\frac{dh_a}{dt} + \frac{\partial \overline{\gamma}}{\partial h_b}\frac{dh_b}{dt} \label{eqn:dgammabardt} \\
+%%
+%\frac{\partial \overline{\gamma}}{\partial p} =& + {
+%  \frac{\frac{d\rhop}{dp}}{\left( h_a-h_b \right) \left( \rhop-\rhopp \right)^2} 
+%  \left\lbrace{ \left( h_a-h_b \right) \rhop + \rhopp \left[{ 
+%    h_b-h_a + \left( \hp-\hpp \right) \ln \left({ \frac{\Gamma(h_a)}{\Gamma(h_b)} }\right) 
+%  }\right] }\right\rbrace 
+%} \nonumber \\ 
+%& - {
+%  \frac{2 \rhop \left( \frac{d\rhop}{dp} - \frac{d\rhopp}{dp} \right)}{\left( h_a-h_b \right) \left( \rhop-\rhopp \right)^3} 
+%  \left\lbrace{ \left( h_a-h_b \right) \rhop + \rhopp \left[{ 
+%    h_b-h_a + \left( \hp-\hpp \right) \ln \left({ \frac{\Gamma(h_a)}{\Gamma(h_b)} }\right)
+%  }\right] }\right\rbrace 
+%} \nonumber \\
+%& + {
+%  \frac{\rhop}{\left( h_a-h_b \right) \left( \rhop-\rhopp \right)^2} \left\lbrace{
+%    { \left( h_a-h_b \right) {\frac{d\rhop}{dp} } } + \frac{d\rhopp}{dp} \left[{ 
+%      h_b-h_a + \left( \hp-\hpp \right) \ln \left( \frac{\Gamma(h_a)}{\Gamma(h_b)} \right) 
+%    }\right] 
+%}\right. } \nonumber \\
+%& \quad \left.{ + \rhopp \left[{
+%  \left({ \frac {d\hp}{dp} - \frac{d\hpp}{dp} }\right) \ln \left({ \frac{\Gamma(h_a)}{\Gamma(h_b)} }\right)
+%  + \frac{\left( \hp-\hpp \right) \left( \Gamma(h_b)  \right) }
+%      { \Gamma(h_a) }
+%}\right. }\right. \nonumber \\
+%& \quad \quad \left.{ \left.{ \cdot \left({
+%  \frac{ \left( h_a-\hp \right) \frac{d\rhop}{dp} - \rhop \frac{d\hp}{dp} 
+%    + \left( \hpp-h_a \right) \frac{d\rhopp}{dp} + \rhopp \frac{d\hpp}{dp}}
+%    {\Gamma(h_b)}
+%}\right.}\right.}\right. \nonumber \\ 
+%& \quad \quad \quad \left.{ \left.{ \left.{ -
+%\frac{ \left( {\rhop}  \left( {h_a}-{\hp} \right) + {\rhopp} \left( {\hpp} - {h_a} \right) \right) 
+%          \left( \left( {h_b}-{\hp} \right) {\frac {d{\rhop}}{{d}p}} - {\rhop}  {\frac{d{\hp}}{{d}p}} + 
+%               \left( {\hpp}  -{h_b} \right) {\frac {d{\rhopp}}{{d}p}} + {\rhopp}  {\frac {d{\hpp}}{{d}p}}
+%          \right) 
+%        }{ \left( {\rhop}   \left( {h_b}-{\hp}   \right) +{\rhopp}   \left( {\hpp}  -{h_b} \right) \right) ^{2}}
+%        } \right) 
+%} \right]  }\right\rbrace
+%%
+%%
+%\label{eqn:dgammabardp} \\
+%%
+%\frac{\partial \overline{\gamma}}{\partial h_a} =&
+%-{\frac{\rhop}{\left(h_a-h_b\right)^{2}\left(\rhop-\rhopp\right)^{2}}\left\lbrace{\left(h_a-h_b\right)\rhop+\rhopp\left[h_b-h_a+\left(\hp-\hpp\right)\ln \left({ \frac{\Gamma(h_a)}{\Gamma(h_b)} }\right)\right]}\right\rbrace} \nonumber \\ 
+%&+{\frac{\rhop}{\left(h_a-h_b\right)\left(\rhop-\rhopp\right)^{2}}\left\lbrace+\rhop+\rhopp\left(-1+{\frac{\left(\hp-\hpp\right)\left(\rhop-\rhopp\right)}{\rhop\left(h_a-\hp\right)+\rhopp\left(\hpp-h_a\right)}}\right)\right\rbrace} \label{eqn:dgammabardha} \\
+%%
+%\frac{\partial \overline{\gamma}}{\partial h_b} =&
+%+{\frac{\rhop}{\left(h_a-h_b\right)^{2}\left(\rhop-\rhopp\right)^{2}}\left\lbrace{\left(h_a-h_b\right)\rhop+\rhopp\left[h_b-h_a+\left(\hp-\hpp\right)\ln \left({ \frac{\Gamma(h_a)}{\Gamma(h_b)} }\right)\right]}\right\rbrace} \nonumber \\
+%&+{\frac{\rhop}{\left(h_a-h_b\right)\left(\rhop-\rhopp\right)^{2}}\left\lbrace-\rhop+\rhopp\left(+1-{\frac{\left(\hp-\hpp\right)\left(\rhop-\rhopp\right)}{\rhop\left(h_b-\hp\right)+\rhopp\left(\hpp-h_b\right)}}\right)\right\rbrace}\label{eqn:dgammabardhb}
+%%
+%\end{align}
+%\end{sidewaysfigure}
+
+
+%\begin{sidewaysfigure}
+\paragraph{THIS GOES INTO THE APPENDIX}
+
+\newcommand{\dhab}{\Delta h_{ab}}
+\newcommand{\dhtp}{\Delta h_{tp}}
+\newcommand{\drtp}{\Delta \rho_{tp}}
+\newcommand{\dhabtp}{\Delta h_{ab,tp}}
+
 \begin{align}
 \frac{d\overline{\gamma}}{dt}  =& + \frac{\partial \overline{\gamma}}{\partial p}\frac{dp}{dt} + \frac{\partial \overline{\gamma}}{\partial h_a}\frac{dh_a}{dt} + \frac{\partial \overline{\gamma}}{\partial h_b}\frac{dh_b}{dt} \label{eqn:dgammabardt} \\
 %
-\frac{\partial \overline{\gamma}}{\partial p} =& + {
-  \frac{\frac{d\rhop}{dp}}{\left( h_a-h_b \right) \left( \rhop-\rhopp \right)^2} 
-  \left\lbrace{ \left( h_a-h_b \right) \rhop + \rhopp \left[{ 
-    h_b-h_a + \left( \hp-\hpp \right) \ln \left({ \frac{\Gamma(h_a)}{\Gamma(h_b)} }\right) 
-  }\right] }\right\rbrace 
-} \nonumber \\ 
-& - {
-  \frac{2 \rhop \left( \frac{d\rhop}{dp} - \frac{d\rhopp}{dp} \right)}{\left( h_a-h_b \right) \left( \rhop-\rhopp \right)^3} 
-  \left\lbrace{ \left( h_a-h_b \right) \rhop + \rhopp \left[{ 
-    h_b-h_a + \left( \hp-\hpp \right) \ln \left({ \frac{\Gamma(h_a)}{\Gamma(h_b)} }\right)
-  }\right] }\right\rbrace 
-} \nonumber \\
-& + {
-  \frac{\rhop}{\left( h_a-h_b \right) \left( \rhop-\rhopp \right)^2} \left\lbrace{
-    { \left( h_a-h_b \right) {\frac{d\rhop}{dp} } } + \frac{d\rhopp}{dp} \left[{ 
-      h_b-h_a + \left( \hp-\hpp \right) \ln \left( \frac{\Gamma(h_a)}{\Gamma(h_b)} \right) 
-    }\right] 
-}\right. } \nonumber \\
-& \quad \left.{ + \rhopp \left[{
-  \left({ \frac {d\hp}{dp} - \frac{d\hpp}{dp} }\right) \ln \left({ \frac{\Gamma(h_a)}{\Gamma(h_b)} }\right)
-  + \frac{\left( \hp-\hpp \right) \left( \Gamma(h_b)  \right) }
-      { \Gamma(h_a) }
-}\right. }\right. \nonumber \\
-& \quad \quad \left.{ \left.{ \cdot \left({
-  \frac{ \left( h_a-\hp \right) \frac{d\rhop}{dp} - \rhop \frac{d\hp}{dp} 
-    + \left( \hpp-h_a \right) \frac{d\rhopp}{dp} + \rhopp \frac{d\hpp}{dp}}
-    {\Gamma(h_b)}
-}\right.}\right.}\right. \nonumber \\ 
-& \quad \quad \quad \left.{ \left.{ \left.{ -
-\frac{ \left( {\rhop}  \left( {h_a}-{\hp} \right) + {\rhopp} \left( {\hpp} - {h_a} \right) \right) 
-          \left( \left( {h_b}-{\hp} \right) {\frac {d{\rhop}}{{d}p}} - {\rhop}  {\frac{d{\hp}}{{d}p}} + 
-               \left( {\hpp}  -{h_b} \right) {\frac {d{\rhopp}}{{d}p}} + {\rhopp}  {\frac {d{\hpp}}{{d}p}}
-          \right) 
-        }{ \left( {\rhop}   \left( {h_b}-{\hp}   \right) +{\rhopp}   \left( {\hpp}  -{h_b} \right) \right) ^{2}}
-        } \right) 
-} \right]  }\right\rbrace
+\frac{\partial \overline{\gamma}}{\partial p}=&+{\frac{\frac{d\rhop}{dp}}{\dhab\drtp^2}\left\lbrace{\dhab\rhop+\rhopp\dhabtp}\right\rbrace}\nonumber\\
+&-{\frac{2\rhop\left(\frac{d\rhop}{dp}-\frac{d\rhopp}{dp}\right)}{\dhab\drtp^3}\left\lbrace{\dhab\rhop+\rhopp\dhabtp}\right\rbrace}\nonumber\\
+&+{\frac\rhop{\dhab\drtp^2}\left\lbrace{{\dhab{\frac{d\rhop}{dp}}}+\frac{d\rhopp}{dp}\dhabtp}\right.}\nonumber\\
+&\quad\left.{+\rhopp\left[{\left({\frac{d\hp}{dp}-\frac{d\hpp}{dp}}\right)\ln\left({G}\right)+\frac{\dhtp}{\Gamma(h_a)}\left({\Theta(h_a)-G\Theta(h_b)}\right)}\right]}\right\rbrace
 %
+\label{eqn:dgammabardp}\\
 %
-\label{eqn:dgammabardp} \\
+\frac{\partial \overline{\gamma}}{\partial h_a}=&
+-{\frac\rhop{\dhab^{2}\drtp^{2}}\left\lbrace{\dhab\rhop+\rhopp\dhabtp}\right\rbrace}\nonumber\\
+&+{\frac\rhop{\dhab\drtp^{2}}\left\lbrace+\rhop+\rhopp\left(-1+\frac{\dhtp\drtp}{\Gamma(h_a)}\right)\right\rbrace}\label{eqn:dgammabardha}\\
 %
-\frac{\partial \overline{\gamma}}{\partial h_a} =&
--{\frac{\rhop}{\left(h_a-h_b\right)^{2}\left(\rhop-\rhopp\right)^{2}}\left\lbrace{\left(h_a-h_b\right)\rhop+\rhopp\left[h_b-h_a+\left(\hp-\hpp\right)\ln \left({ \frac{\Gamma(h_a)}{\Gamma(h_b)} }\right)\right]}\right\rbrace} \nonumber \\ 
-&+{\frac{\rhop}{\left(h_a-h_b\right)\left(\rhop-\rhopp\right)^{2}}\left\lbrace+\rhop+\rhopp\left(-1+{\frac{\left(\hp-\hpp\right)\left(\rhop-\rhopp\right)}{\rhop\left(h_a-\hp\right)+\rhopp\left(\hpp-h_a\right)}}\right)\right\rbrace} \label{eqn:dgammabardha} \\
+\frac{\partial \overline{\gamma}}{\partial h_b}=&
++{\frac\rhop{\dhab^{2}\drtp^{2}}\left\lbrace{\dhab\rhop+\rhopp\dhabtp}\right\rbrace}\nonumber\\
+&+{\frac\rhop{\dhab\drtp^{2}}\left\lbrace-\rhop+\rhopp\left(+1-\frac{\dhtp\drtp}{\Gamma(h_b)}\right)\right\rbrace}\label{eqn:dgammabardhb}\\
 %
-\frac{\partial \overline{\gamma}}{\partial h_b} =&
-+{\frac{\rhop}{\left(h_a-h_b\right)^{2}\left(\rhop-\rhopp\right)^{2}}\left\lbrace{\left(h_a-h_b\right)\rhop+\rhopp\left[h_b-h_a+\left(\hp-\hpp\right)\ln \left({ \frac{\Gamma(h_a)}{\Gamma(h_b)} }\right)\right]}\right\rbrace} \nonumber \\
-&+{\frac{\rhop}{\left(h_a-h_b\right)\left(\rhop-\rhopp\right)^{2}}\left\lbrace-\rhop+\rhopp\left(+1-{\frac{\left(\hp-\hpp\right)\left(\rhop-\rhopp\right)}{\rhop\left(h_b-\hp\right)+\rhopp\left(\hpp-h_b\right)}}\right)\right\rbrace}\label{eqn:dgammabardhb}
-%
+\text{ with } 
+\dhtp     =&\;\, \hp-\hpp, \quad \drtp = \rhop-\rhopp, \quad \dhab = h_a-h_b, \nonumber\\
+\Theta(h) =& \left(h-\hp\right)\frac{d\rhop}{dp}-\rhop\frac{d\hp}{dp}+\left(\hpp-h\right)\frac{d\rhopp}{dp}+\rhopp\frac{d\hpp}{dp}, \nonumber\\
+\dhabtp   =& -\dhab+\dhtp\ln\left(G\right), \text{ and } G = \Gamma(h_a) / \Gamma(h_b) \text{. } \nonumber
 \end{align}
-\end{sidewaysfigure}
+%\end{sidewaysfigure}
 
-\begin{sidewaysfigure}
-\textbf{THIS GOES INTO THE APPENDIX AS WELL}
-\begin{align}
-\frac{\partial \overline{\gamma}}{\partial p} =& + {
-  \frac{\frac{d\rhop}{dp}}{\left( h_a-h_b \right) \left( \rhop-\rhopp \right)^2} 
-  \Lambda } - {
-  \frac{2 \rhop \left( \frac{d\rhop}{dp} - \frac{d\rhopp}{dp} \right)}{\left( h_a-h_b \right) \left( \rhop-\rhopp \right)^3} 
-  \Lambda } \nonumber \\
-& + {\Psi\left(h_a-h_b\right) \left\lbrace{
-    { \left( h_a-h_b \right) {\frac{d\rhop}{dp} } } + \frac{d\rhopp}{dp} 
-  \Phi }\right. } \nonumber \\
-& \quad \left.{ + \rhopp \left[{
-  \left({ \frac {d\hp}{dp} - \frac{d\hpp}{dp} }\right) \ln \left({ \frac{\Gamma(h_a)}{\Gamma(h_b)} }\right)
-  + \frac{\left( \hp-\hpp \right) \left( \Gamma(h_b)  \right) }
-      { \Gamma(h_a) }
-}\right. }\right. \nonumber \\
-& \quad \quad \left.{ \left.{ \cdot \left({
-  \frac{ \left( h_a-\hp \right) \frac{d\rhop}{dp} - \rhop \frac{d\hp}{dp} 
-    + \left( \hpp-h_a \right) \frac{d\rhopp}{dp} + \rhopp \frac{d\hpp}{dp}}
-    {\Gamma(h_b)}
-}\right.}\right.}\right. \nonumber \\ 
-& \quad \quad \quad \left.{ \left.{ \left.{ -
-\frac{ \left( \Gamma(h_a) \right) 
-          \left( \left( h_b-\hp \right) \frac{d\rhop}{dp} - \rhop \frac{d\hp}{dp} + 
-               \left( \hpp-h_b \right) \frac{d\rhopp}{dp} + \rhopp \frac{d\hpp}{dp}
-          \right) 
-        }{ \left( \Gamma(h_b) \right)^2 }
-        } \right) 
-} \right]  }\right\rbrace
-%
-%
-\label{eqn:dgammabardpalt} \\
-%
-\frac{\partial \overline{\gamma}}{\partial h_a} =&
--{\Psi\Lambda} + {\Psi\left(h_a-h_b\right)\left\lbrace+\rhop+\rhopp\left(-1+{\frac{\left(\hp-\hpp\right)\left(\rhop-\rhopp\right)}{\Gamma(h_a)}}\right)\right\rbrace} \label{eqn:dgammabardhaalt} \\
-%
-\frac{\partial \overline{\gamma}}{\partial h_b} =&
-+{\Psi\Lambda} + {\Psi\left(h_a-h_b\right)\left\lbrace-\rhop+\rhopp\left(+1-{\frac{\left(\hp-\hpp\right)\left(\rhop-\rhopp\right)}{\Gamma(h_b)}}\right)\right\rbrace}\label{eqn:dgammabardhbalt} \\
-%
-\text{ with } \Lambda =& (h_a-h_b)\rhop+\Phi\rhopp \\
-\Phi =& h_b-h_a+(\hp-\hpp)\ln\left(\frac{\Gamma(h_a)}{\Gamma(h_b)}\right) \\
-\Psi =& \rhop (h_a-h_b)^{-2} (\rhop-\rhopp)^{-2}
-%
-\end{align}
-\end{sidewaysfigure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%% ENERGY BALANCE DERIVATION PROCESS %%%%%%%%%%%%%%%%%%%%%%
