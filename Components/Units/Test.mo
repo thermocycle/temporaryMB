@@ -105,6 +105,111 @@ package Test
       __Dymola_experimentSetupOutput);
   end Test_MBeva_Complete_NTU;
 
+  model Test_MBeva_Complete_NTU_2
+  parameter Real tr = 30 "nominal ramp duration";
+  parameter Integer Ntot = 10 "nominal number of nodes";
+  parameter Real phin = 150954 "nominal external heat flux";
+  parameter Real phip = 0.05 "percent varation of external heat flux";
+  parameter Real phit = 4000 "time of first variation of external heat flux";
+  parameter Real wn = 0.05 "nominal inlet mass flow rate";
+  parameter Real wp = 0.05 "percent varation of inlet mass flow rate";
+  parameter Real wt = 2000 "time of first variation of inlet mass flow rate";
+  parameter Real cmdn = 0.5 "nominal valve's command";
+  parameter Real cmdp = 0.05 "percent varation of valve's command";
+  parameter Real cmdt = 800 "time of first variation of valve's command";
+    ThermoCycle.Components.FluidFlow.Reservoirs.SourceMdot sourceMdot(
+      UseT=false,
+      h_0=852450,
+      Mdot_0=0.05,
+      redeclare package Medium = CoolProp2Modelica.Media.WaterTPSI_FP,
+      p=6000000)
+      annotation (Placement(transformation(extent={{-86,-50},{-66,-30}})));
+    Modelica.Blocks.Sources.Constant Hin(k=852540)
+      annotation (Placement(transformation(extent={{-100,-16},{-80,4}},
+            rotation=0)));
+    ThermoPower.Water.ValveLin valveLin(Kv=2*0.05/59e5, redeclare package
+        Medium = CoolProp2Modelica.Media.WaterTPSI_FP)
+      annotation (Placement(transformation(extent={{60,-44},{80,-24}},
+            rotation=0)));
+    ThermoPower.Water.SinkP sinkP1(
+                                  redeclare package Medium =
+       CoolProp2Modelica.Media.WaterTPSI_FP, p0=10000000000)
+                          annotation (Placement(transformation(extent={{90,-44},{110,
+              -24}},          rotation=0)));
+    Modelica.Blocks.Sources.Constant Pout(k=1e5)
+      annotation (Placement(transformation(extent={{128,14},{108,34}},
+                                                                     rotation=
+             0)));
+    inner ThermoPower.System system(allowFlowReversal=false)
+      annotation (Placement(transformation(extent={{-86,56},{-66,76}})));
+   Components.Units.HeatExchangers.MovingBoundary.MBeva_Complete_NTU_2 mBeva_Complete(
+      A=0.0314159,
+      L=1,
+      M_tot=9.35E+01,
+      c_wall=385,
+      rho_wall=8.93e3,
+      TwSB(start=510.97 + 50, displayUnit="K"),
+      TwTP(start=548.79 + 21, displayUnit="K"),
+      TwSH(start=585.97 + 35, displayUnit="K"),
+      Tsf_SU_start=360 + 273.15,
+      U_SB=3000,
+      U_TP=10000,
+      U_SH=3000,
+      L_SB(start=0.2),
+      L_TP(start=0.4),
+      h_EX(start=3043000),
+      Void=0.665,
+      dVoid_dp=0,
+      dVoid_dh=0,
+      redeclare package Medium = CoolProp2Modelica.Media.WaterTPSI_FP,
+      Usf=20000,
+      ETA=1,
+      p(start=6000000),
+      dTsf_start=343.15)
+      annotation (Placement(transformation(extent={{-38,-42},{10,6}})));
+    ThermoCycle.Components.FluidFlow.Reservoirs.SourceCdot sourceCdot(
+      rho=1000,
+      Mdot_0=2,
+      cp=2046,
+      T_0=653.15) annotation (Placement(transformation(extent={{2,30},{22,50}})));
+    Modelica.Blocks.Sources.Constant Cmd_nom(k=cmdn)
+      annotation (Placement(transformation(extent={{26,74},{42,84}},
+                                                                   rotation=0)));
+  equation
+    connect(Hin.y, sourceMdot.in_h) annotation (Line(
+        points={{-79,-6},{-70,-6},{-70,-34}},
+        color={0,0,127},
+        smooth=Smooth.None));
+    connect(sinkP1.flange, valveLin.outlet)
+      annotation (Line(points={{90,-34},{84,-34},{80,-34}}));
+    connect(Pout.y, sinkP1.in_p0) annotation (Line(
+        points={{107,24},{94,24},{94,-25.2},{96,-25.2}},
+        color={0,0,127},
+        smooth=Smooth.None));
+    connect(sourceMdot.flangeB, mBeva_Complete.InFlow) annotation (Line(
+        points={{-67,-40},{-52,-40},{-52,-33.36},{-37.52,-33.36}},
+        color={0,0,255},
+        smooth=Smooth.None));
+    connect(mBeva_Complete.OutFlow, valveLin.inlet) annotation (Line(
+        points={{10,-33.36},{36,-33.36},{36,-34},{60,-34}},
+        color={0,0,255},
+        smooth=Smooth.None));
+    connect(sourceCdot.flange, mBeva_Complete.InFlow_sf) annotation (Line(
+        points={{20.2,39.9},{32,39.9},{32,-3.6},{10,-3.6}},
+        color={255,0,0},
+        smooth=Smooth.None));
+    connect(Cmd_nom.y, valveLin.cmd) annotation (Line(
+        points={{42.8,79},{70,79},{70,-26}},
+        color={0,0,127},
+        smooth=Smooth.None));
+    annotation (Diagram(coordinateSystem(extent={{-100,-100},{100,100}},
+            preserveAspectRatio=false),
+                        graphics), Icon(coordinateSystem(extent={{-100,-100},{100,
+              100}})),
+      experiment(StopTime=1000),
+      __Dymola_experimentSetupOutput);
+  end Test_MBeva_Complete_NTU_2;
+
   model Test_MBeva
   parameter Real tr = 30 "nominal ramp duration";
   parameter Integer Ntot = 10 "nominal number of nodes";
@@ -1146,7 +1251,6 @@ package Test
 
     ThermoCycle.Components.FluidFlow.Reservoirs.SourceMdot_pT sourceMdot_pT( redeclare
         package Medium =                                                              MediumINC,
-
       Mdot_0=2.97,
       p=200000,
       T_0=398.15)
@@ -1154,23 +1258,14 @@ package Test
 
     ThermoCycle.Components.FluidFlow.Reservoirs.SinkP_pT sinkP_pT( redeclare
         package Medium =                                                              MediumINC,
-
       p0=200000,
       T=387.15)
       annotation (Placement(transformation(extent={{-74,14},{-94,34}})));
-    ThermoCycle.Components.Units.PdropAndValves.Valve valve(
-      UseNom=true,
-      redeclare package Medium = Medium,
-      Mdot_nom=0.3388,
-      p_nom=850000,
-      T_nom=385.15,
-      DELTAp_nom=20000)
-      annotation (Placement(transformation(extent={{34,-16},{54,4}})));
+
     HeatExchangers.MovingBoundary.MovingBoundaryFlooded_NTU
       movingBoundaryFlooded_NTU( redeclare package Medium1 =                           Medium,
           redeclare package Medium2 =                                                  MediumINC,
       c_w=500,
-      VV=0.7,
       DVVdt=0,
       M_w=69,
       c_sf=2000,
@@ -1180,37 +1275,46 @@ package Test
       h_ex(start=198807),
       AA=0.00006571,
       LL=563,
-      l_sc(start=300),
+      VV=0.1,
       p_wf(start=1000000),
-      Tw_sc(start=453.15),
-      Tw_tp(start=473.15),
+      Tw_sc(start=353.15),
+      Tw_tp(start=373.15),
       Tsf_su(start=398.15),
       Tsf_ex(start=387.15))
-      annotation (Placement(transformation(extent={{-32,-14},{6,24}})));
+      annotation (Placement(transformation(extent={{-34,-14},{4,24}})));
+    ThermoCycle.Components.Units.PdropAndValves.Valve valve(
+      UseNom=true,
+      redeclare package Medium = Medium,
+      Mdot_nom=0.3388,
+      p_nom=30000,
+      T_nom=385.15,
+      DELTAp_nom=50000)
+      annotation (Placement(transformation(extent={{30,-26},{50,-6}})));
   equation
-    connect(valve.OutFlow, SinkWater.flangeB) annotation (Line(
-        points={{53,-6},{74,-6},{74,-20},{79.6,-20}},
-        color={0,0,255},
-        smooth=Smooth.None));
     connect(SourceWater.flangeB, movingBoundaryFlooded_NTU.InFlow_wf) annotation (
        Line(
-        points={{-69,-24},{-64,-24},{-64,-26},{-56,-26},{-56,-6.02},{-31.62,-6.02}},
+        points={{-69,-24},{-64,-24},{-64,-26},{-56,-26},{-56,-6.02},{-33.62,
+            -6.02}},
         color={0,0,255},
         smooth=Smooth.None));
 
-    connect(movingBoundaryFlooded_NTU.OutFlow_wf, valve.InFlow) annotation (Line(
-        points={{5.24,-6.02},{30,-6.02},{30,-6},{35,-6}},
-        color={0,0,255},
-        smooth=Smooth.None));
     connect(sourceMdot_pT.flangeB, movingBoundaryFlooded_NTU.InFlow_sf)
       annotation (Line(
-        points={{69,28},{40,28},{40,16},{26,16},{26,15.26},{5.24,15.26}},
+        points={{69,28},{40,28},{40,16},{26,16},{26,15.26},{3.24,15.26}},
         color={0,127,0},
         smooth=Smooth.None));
     connect(sinkP_pT.flangeB, movingBoundaryFlooded_NTU.OutFlow_sf) annotation (
         Line(
-        points={{-75.6,24},{-62,24},{-62,16.4},{-31.62,16.4}},
+        points={{-75.6,24},{-62,24},{-62,16.4},{-33.62,16.4}},
         color={0,127,0},
+        smooth=Smooth.None));
+    connect(movingBoundaryFlooded_NTU.OutFlow_wf, valve.InFlow) annotation (Line(
+        points={{3.24,-6.02},{14,-6.02},{14,-16},{31,-16}},
+        color={0,0,255},
+        smooth=Smooth.None));
+    connect(valve.OutFlow, SinkWater.flangeB) annotation (Line(
+        points={{49,-16},{58,-16},{58,-20},{79.6,-20}},
+        color={0,0,255},
         smooth=Smooth.None));
     annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,
               -100},{100,100}}), graphics),
@@ -1232,7 +1336,6 @@ package Test
       annotation (Placement(transformation(extent={{-94,-22},{-74,-2}})));
     ThermoCycle.Components.FluidFlow.Reservoirs.SourceMdot SourceINC( redeclare
         package Medium =                                                                        MediumINC,
-
       Mdot_0=2.97,
       p=200000,
       T_0=398.15)
@@ -1245,10 +1348,10 @@ package Test
       annotation (Placement(transformation(extent={{70,-10},{90,10}})));
     ThermoCycle.Components.FluidFlow.Reservoirs.SinkP sinkINC( redeclare
         package Medium =                                                                 MediumINC,
-
       h=153804,
       p0=200000)
       annotation (Placement(transformation(extent={{-72,42},{-92,62}})));
+
     ThermoCycle.Components.Units.HeatExchangers.Hx1DInc hx1DInc( redeclare
         package Medium1 =                                                              Medium, redeclare
         package Medium2 =                                                                                                 MediumINC,
@@ -2602,4 +2705,217 @@ package Test
     T_tp = Medium.saturationTemperature_sat(sat);
 
   end FluidProperties;
+
+  model Test_p_drop
+  replaceable package Medium = ThermoCycle.Media.SES36_CP;
+    ThermoCycle.Components.FluidFlow.Reservoirs.SinkP SinkWater(  redeclare
+        package Medium =                                                              Medium,
+      h=198807,
+      p0=850000)
+      annotation (Placement(transformation(extent={{42,24},{62,44}})));
+    ThermoCycle.Components.Units.PdropAndValves.Valve valve(
+      UseNom=true,
+      redeclare package Medium = Medium,
+      Mdot_nom=0.3388,
+      p_nom=835000,
+      T_nom=385.15,
+      DELTAp_nom=20000)
+      annotation (Placement(transformation(extent={{-6,-14},{14,6}})));
+    ThermoCycle.Components.FluidFlow.Reservoirs.SourceMdot SourceWater(  redeclare
+        package Medium =                                                              Medium,
+      Mdot_0=0.3388,
+      p=835000,
+      T_0=333.15)
+      annotation (Placement(transformation(extent={{-84,-12},{-64,8}})));
+  equation
+    connect(valve.OutFlow,SinkWater. flangeB) annotation (Line(
+        points={{13,-4},{34,-4},{34,34},{43.6,34}},
+        color={0,0,255},
+        smooth=Smooth.None));
+    connect(SourceWater.flangeB, valve.InFlow) annotation (Line(
+        points={{-65,-2},{-10,-2},{-10,-4},{-5,-4}},
+        color={0,0,255},
+        smooth=Smooth.None));
+    annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,
+              -100},{100,100}}), graphics));
+  end Test_p_drop;
+
+  model MBFlooded_LMTD
+
+  replaceable package Medium = ThermoCycle.Media.SES36_CP;
+  replaceable package MediumINC =
+        ThermoCycle.Media.Incompressible.IncompressibleTables.Therminol66;
+
+    ThermoCycle.Components.FluidFlow.Reservoirs.SourceMdot SourceWater(  redeclare
+        package Medium =                                                              Medium,
+      Mdot_0=0.3388,
+      p=835000,
+      T_0=333.15)
+      annotation (Placement(transformation(extent={{-88,-34},{-68,-14}})));
+
+    ThermoCycle.Components.FluidFlow.Reservoirs.SinkP SinkWater(  redeclare
+        package Medium =                                                              Medium,
+      h=198807,
+      p0=850000)
+      annotation (Placement(transformation(extent={{78,-30},{98,-10}})));
+
+    ThermoCycle.Components.FluidFlow.Reservoirs.SourceMdot_pT sourceMdot_pT( redeclare
+        package Medium =                                                              MediumINC,
+      Mdot_0=2.97,
+      p=200000,
+      T_0=398.15)
+      annotation (Placement(transformation(extent={{88,18},{68,38}})));
+
+    ThermoCycle.Components.FluidFlow.Reservoirs.SinkP_pT sinkP_pT( redeclare
+        package Medium =                                                              MediumINC,
+      p0=200000,
+      T=387.15)
+      annotation (Placement(transformation(extent={{-74,14},{-94,34}})));
+
+    HeatExchangers.MovingBoundary.MovingBoundaryFlooded
+      movingBoundaryFlooded_LMTD( redeclare package Medium1 =                           Medium,
+          redeclare package Medium2 =                                                  MediumINC,
+      c_w=500,
+      DVVdt=0,
+      M_w=69,
+      c_sf=2000,
+      U_sc=3000,
+      U_tp=8700,
+      U_sf=1500,
+      h_ex(start=198807),
+      AA=0.00006571,
+      LL=563,
+      VV=0.1,
+      l_sc(start=100),
+      p_wf(start=1000000),
+      Tw_sc(start=353.15),
+      Tw_tp(start=373.15),
+      Tsf_su(start=398.15),
+      Tsf_ex(start=387.15))
+      annotation (Placement(transformation(extent={{-36,-14},{2,24}})));
+    ThermoCycle.Components.Units.PdropAndValves.Valve valve(
+      UseNom=true,
+      redeclare package Medium = Medium,
+      Mdot_nom=0.3388,
+      p_nom=30000,
+      T_nom=385.15,
+      DELTAp_nom=50000)
+      annotation (Placement(transformation(extent={{30,-26},{50,-6}})));
+  equation
+
+    connect(valve.OutFlow, SinkWater.flangeB) annotation (Line(
+        points={{49,-16},{58,-16},{58,-20},{79.6,-20}},
+        color={0,0,255},
+        smooth=Smooth.None));
+    connect(SourceWater.flangeB, movingBoundaryFlooded_LMTD.InFlow_wf)
+      annotation (Line(
+        points={{-69,-24},{-64,-24},{-64,-22},{-58,-22},{-58,-6.02},{-35.62,
+            -6.02}},
+        color={0,0,255},
+        smooth=Smooth.None));
+    connect(movingBoundaryFlooded_LMTD.OutFlow_wf, valve.InFlow) annotation (
+        Line(
+        points={{1.24,-6.02},{12,-6.02},{12,-14},{31,-14},{31,-16}},
+        color={0,0,255},
+        smooth=Smooth.None));
+    connect(sinkP_pT.flangeB, movingBoundaryFlooded_LMTD.OutFlow_sf)
+      annotation (Line(
+        points={{-75.6,24},{-50,24},{-50,16.4},{-35.62,16.4}},
+        color={0,127,0},
+        smooth=Smooth.None));
+    connect(movingBoundaryFlooded_LMTD.InFlow_sf, sourceMdot_pT.flangeB)
+      annotation (Line(
+        points={{1.24,15.26},{34,15.26},{34,28},{69,28}},
+        color={0,127,0},
+        smooth=Smooth.None));
+    annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,
+              -100},{100,100}}), graphics),
+      experiment(StopTime=300),
+      __Dymola_experimentSetupOutput);
+  end MBFlooded_LMTD;
+
+  model Test_MB_NTU
+
+    HeatExchangers.MovingBoundary.MovingBoundary_NTU movingBoundary_NTU(
+      redeclare package Medium1 = ThermoCycle.Media.Water,
+      AA=0.0314159,
+      LL=1,
+      M_w=9.35E+01,
+      c_w=385,
+      U_sc=3000,
+      U_tp=10000,
+      U_sh=3000,
+      U_sf=20000,
+      l_sc(start=0.2),
+      l_tp(start=0.4),
+      h_ex(start=3043000),
+      VV=0.665,
+      p_wf(start=6000000),
+      Tw_sc(start=560.35),
+      Tw_tp(start=569.79),
+      Tw_sh(start=620.97),
+      Tsf_su(start=633.15),
+      Tsf_ex(start=563.15))
+      annotation (Placement(transformation(extent={{-36,-26},{40,42}})));
+
+    ThermoCycle.Components.FluidFlow.Reservoirs.SourceMdot sourceMdot(
+      UseT=false,
+      h_0=852450,
+      Mdot_0=0.05,
+      redeclare package Medium = ThermoCycle.Media.Water,
+      p=6000000)
+      annotation (Placement(transformation(extent={{-74,-44},{-54,-24}})));
+    Modelica.Blocks.Sources.Constant Hin(k=852540)
+      annotation (Placement(transformation(extent={{-90,-6},{-70,14}},
+            rotation=0)));
+    Modelica.Blocks.Sources.Constant Pout(k=1e5)
+      annotation (Placement(transformation(extent={{120,10},{100,30}},
+                                                                     rotation=
+             0)));
+    ThermoCycle.Components.FluidFlow.Reservoirs.SinkP sinkP(redeclare package
+        Medium =
+          ThermoCycle.Media.Water)
+      annotation (Placement(transformation(extent={{86,-24},{106,-4}})));
+    ThermoCycle.Components.Units.PdropAndValves.Valve valve(
+      UseNom=true,
+      redeclare package Medium = ThermoCycle.Media.Water,
+      Mdot_nom=0.05,
+      p_nom=6000000,
+      T_nom=643.15,
+      DELTAp_nom=5000000)
+      annotation (Placement(transformation(extent={{56,-30},{76,-10}})));
+    ThermoCycle.Components.FluidFlow.Reservoirs.SourceCdot sourceCdot(
+      rho=1000,
+      Mdot_0=2,
+      cp=2046,
+      T_0=653.15) annotation (Placement(transformation(extent={{24,54},{44,74}})));
+  equation
+    connect(Hin.y,sourceMdot. in_h) annotation (Line(
+        points={{-69,4},{-58,4},{-58,-28}},
+        color={0,0,127},
+        smooth=Smooth.None));
+    connect(sourceMdot.flangeB, movingBoundary_NTU.InFlow_wf) annotation (Line(
+        points={{-55,-34},{-48,-34},{-48,-30},{-40,-30},{-40,-11.72},{-35.24,-11.72}},
+        color={0,0,255},
+        smooth=Smooth.None));
+
+    connect(Pout.y,sinkP. in_p0) annotation (Line(
+        points={{99,20},{92,20},{92,-5.2}},
+        color={0,0,127},
+        smooth=Smooth.None));
+    connect(valve.OutFlow,sinkP. flangeB) annotation (Line(
+        points={{75,-20},{82,-20},{82,-14},{87.6,-14}},
+        color={0,0,255},
+        smooth=Smooth.None));
+    connect(movingBoundary_NTU.OutFlow_wf, valve.InFlow) annotation (Line(
+        points={{38.48,-11.72},{42,-11.72},{42,-20},{57,-20}},
+        color={0,0,255},
+        smooth=Smooth.None));
+    connect(sourceCdot.flange, movingBoundary_NTU.InFlow_sf) annotation (Line(
+        points={{42.2,63.9},{62,63.9},{62,26.36},{38.48,26.36}},
+        color={255,0,0},
+        smooth=Smooth.None));
+    annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,
+              -100},{100,100}}), graphics));
+  end Test_MB_NTU;
 end Test;

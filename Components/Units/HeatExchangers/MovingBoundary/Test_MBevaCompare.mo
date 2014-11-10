@@ -41,7 +41,7 @@ model Test_MBevaCompare
     U_TP=10000,
     U_SH=5000,
     Usf=2000)
-    annotation (Placement(transformation(extent={{-10,-50},{10,-30}})));
+    annotation (Placement(transformation(extent={{-10,-48},{10,-28}})));
   ThermoCycle.Components.FluidFlow.Reservoirs.SourceCdot sourceCdot(
     rho=1000,
     Mdot_0=2,
@@ -87,12 +87,12 @@ model Test_MBevaCompare
     N=15,
     redeclare model Medium1HeatTransferModel =
         ThermoCycle.Components.HeatFlow.HeatTransfer.ConvectiveHeatTransfer.Constant,
-
     Mdotnom_sf=sourceCdot1.Mdot_0,
     Mdotnom_wf=sourceMdot1.Mdot_0,
     A_sf=Modelica.Constants.pi*MB_eva.D*MB_eva.L,
     A_wf=Modelica.Constants.pi*MB_eva.D*MB_eva.L)
     annotation (Placement(transformation(extent={{-10,30},{10,50}})));
+
   ThermoCycle.Components.FluidFlow.Reservoirs.SourceCdot sourceCdot1(
     Mdot_0=sourceCdot.Mdot_0,
     T_0=sourceCdot.T_0,
@@ -130,16 +130,16 @@ equation
       color={0,0,127},
       smooth=Smooth.None));
   connect(sourceCdot.flange, MB_eva.InFlow_sf) annotation (Line(
-      points={{41.8,-30.1},{30,-30.1},{30,-30},{20,-30},{20,-34},{10,-34}},
+      points={{41.8,-30.1},{30,-30.1},{30,-30},{20,-30},{20,-32},{10,-32}},
       color={255,0,0},
       smooth=Smooth.None));
   connect(sourceMdot.flangeB, MB_eva.InFlow) annotation (Line(
-      points={{-61,-50},{-20,-50},{-20,-46},{-10,-46}},
+      points={{-61,-50},{-20,-50},{-20,-44.4},{-9.8,-44.4}},
       color={0,0,255},
       smooth=Smooth.None));
 
   connect(MB_eva.OutFlow, valve.InFlow) annotation (Line(
-      points={{10,-46},{20,-46},{20,-50},{41,-50}},
+      points={{10,-44.4},{20,-44.4},{20,-50},{41,-50}},
       color={0,0,255},
       smooth=Smooth.None));
   connect(valve.OutFlow, sinkP.flangeB) annotation (Line(

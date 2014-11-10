@@ -25,12 +25,6 @@ parameter Modelica.SIunits.CoefficientOfHeatTransfer U_tp
     "Heat transfer coefficient two-phase side";
 parameter Modelica.SIunits.CoefficientOfHeatTransfer U_sf
     "Secondary fluid Heat transfer coefficient sub-cooled side";
-/* INITIAL VARIABLES */
-// parameter Medium1.Temperature Tstart_SB=1E5 "Start value of enthalpy"
-//     annotation (Dialog(tab="Initialization"));
-// parameter Medium1.Temperature Tstart_TP=1E5 "Start value of enthalpy"
-//     annotation (Dialog(tab="Initialization"));
-// parameter Modelica.SIunits.Length l_sc_start annotation (Dialog(tab="Initialization"));
 
 /** VARIABLES **/
 /*length*/
@@ -41,7 +35,7 @@ Modelica.SIunits.MassFlowRate m_dot_su( start = 0)
     "SU: MassFlow at inlet of Hx";
 Modelica.SIunits.MassFlowRate m_dot_a "A: MassFlow at SC-TP interface";
 Modelica.SIunits.MassFlowRate m_dot_ex( start = 0) "EX: MassFlow at outlet Hx";
-
+Modelica.SIunits.MassFlowRate m_dot_sf "SF: MassFlow of the secondary fluid";
 /* Thermodynamic states*/
 Medium1.ThermodynamicState subCooled "SC: sub-cooled thermodynamic state";
 Medium1.SaturationProperties sat "TP: Two-phase thermpdynamic state";
@@ -53,7 +47,7 @@ Modelica.SIunits.Pressure p_wf( start = 0) "Pressure of the working fluid";
 /* ¨Primary fluid */
 Modelica.SIunits.Temperature T_su "SU: T at the inlet of Hx";
 Modelica.SIunits.Temperature T_sc(start = 273.15) "SC: T of sub-cooled";
-Modelica.SIunits.Temperature T_a "A: T at SC-TP interface NOT USED";
+//Modelica.SIunits.Temperature T_a "A: T at SC-TP interface NOT USED";
 Modelica.SIunits.Temperature T_tp(start = 273.15)
     "TP: T of the two-phase region";
 Modelica.SIunits.Temperature T_ex "EX: T at the outlet of Hx";
@@ -114,11 +108,12 @@ Modelica.SIunits.ThermodynamicTemperature LMTD_tp_sf(displayUnit="K");
 
 Modelica.SIunits.ThermodynamicTemperature pinch_sc_wf(displayUnit="K",min=1);
 Modelica.SIunits.ThermodynamicTemperature pinch_sc_sf(displayUnit="K",min=1);
-Modelica.SIunits.ThermodynamicTemperature pinch_tp_wf(displayUnit="K",min=1);
+//Modelica.SIunits.ThermodynamicTemperature pinch_tp_wf(displayUnit="K",min=1);
 Modelica.SIunits.ThermodynamicTemperature pinch_tp_sf(displayUnit="K",min=1);
   Modelica.SIunits.ThermalConductance AU_sc_wf;
   Modelica.SIunits.ThermalConductance AU_tp_wf;
-  Modelica.SIunits.ThermalConductance AU_sf;
+  Modelica.SIunits.ThermalConductance AU_sc_sf;
+  Modelica.SIunits.ThermalConductance AU_tp_sf;
 
 /* Heat flow */
 Modelica.SIunits.Power Q_sc_wf "SC: Q wf to wall";
@@ -169,24 +164,23 @@ LL = l_sc + l_tp;
  /* Heat transfer wf */
   AU_sc_wf = 2*pi*rr*l_sc*U_sc;
   Q_sc_wf = AU_sc_wf*LMTD_sc_wf;
-  LMTD_sc_wf = homotopy(ThermoCycle.Functions.LMTD_robust(Tw_1 - T_su, Tw_a -T_a), max(0, pinch_sc_wf));
-  pinch_sc_wf = min(Tw_1-T_su,Tw_a-T_a);
+  LMTD_sc_wf = homotopy(ThermoCycle.Functions.LMTD_robust(Tw_1 - T_su, Tw_a -T_tp), max(0, pinch_sc_wf));
+  pinch_sc_wf = min(Tw_1-T_su,Tw_a-T_tp);
   Q_sc_wf = (m_dot_su+m_dot_a)/2*(h_a - h_su);
 
  /* Energy balance wall*/
   (c_w*M_w/LL)*(l_sc*der(Tw_sc) + (Tw_sc - Tw_a)*der(l_sc)) = Q_sc_sf - Q_sc_wf;
-   Tw_sc = Tw_1 + (Tw_a - Tw_1)/2;
+   //Tw_sc = Tw_1 + (Tw_a - Tw_1)/2;
    Tw_a = (Tw_sc*l_tp + Tw_tp*l_sc)/(LL);
 
  /*Secondary fluid */
-   AU_sf = 2*pi*rr*l_sc*U_sf;
+   AU_sc_sf = 2*pi*rr*l_sc*U_sf;
    LMTD_sc_sf=  homotopy(ThermoCycle.Functions.LMTD_robust(Tsf_ex - Tw_1, Tsf_a - Tw_a),max(0, pinch_sc_sf));
    pinch_sc_sf = min(Tsf_ex - Tw_1,Tsf_a - Tw_a);
-   Q_sc_sf = AU_sf*LMTD_sc_sf;
-   Q_sc_sf = InFlow_sf.m_flow*c_sf*(Tsf_a - Tsf_ex);
+   Q_sc_sf = AU_sc_sf*LMTD_sc_sf;
+   Q_sc_sf = m_dot_sf*c_sf*(Tsf_a - Tsf_ex);
 
  /*** TWO-PHASE REGION ***/
- //meanState = Medium1.setState_pT(InFlow_wf.p,(T_tp+T_ex)/2);
   sat = Medium1.setSat_p(p_wf);
   T_tp = Medium1.saturationTemperature_sat(sat);
   h_sl = Medium1.bubbleEnthalpy(sat);
@@ -199,30 +193,32 @@ LL = l_sc + l_tp;
   dhdp_sv = Medium1.dDewEnthalpy_dPressure(sat);
 
   /* Mass Balance wf */
-  AA*(der(l_tp)*(rho_sv*VV + (1-VV)*rho_sl) + (l_tp)*((rho_sv - rho_sl)*DVVdt + VV*drdp_sv*der(p_wf) + (1-VV)*drdp_sl*der(p_wf))) + AA*rho_a*der(l_sc) = m_dot_a - m_dot_ex;
+  AA*(-der(l_sc)*(rho_sv*VV + (1-VV)*rho_sl) + (l_tp)*((rho_sv - rho_sl)*DVVdt + VV*drdp_sv*der(p_wf) + (1-VV)*drdp_sl*der(p_wf))) + AA*rho_a*der(l_sc) = m_dot_a - m_dot_ex;
 
   /* Energy Balance wf */
- AA*(der(l_tp)*(rho_sv*h_sv*VV +(1-VV)*rho_sl*h_sl) +
+ AA*(-der(l_sc)*(rho_sv*h_sv*VV +(1-VV)*rho_sl*h_sl) +
   l_tp*(DVVdt*(rho_sv*h_sv - rho_sl*h_sl) + VV*h_sv*drdp_sv*der(p_wf) + VV*rho_sv*dhdp_sv*der(p_wf) + (1-VV)*drdp_sl*der(p_wf)*h_sl + (1-VV)*rho_sl*dhdp_sl*der(p_wf)))
    +AA*rho_a*h_a*der(l_sc) - AA*l_tp*der(p_wf) = m_dot_a*h_a - m_dot_ex*h_ex + Q_tp_wf;
 
 /*Heat transfer wf */
 AU_tp_wf = 2*pi*rr*l_tp*U_tp;
-C_dot_tp = (m_dot_a+m_dot_ex)/2*Medium1.specificHeatCapacityCp(subCooled);
+C_dot_tp = (m_dot_a+m_dot_ex)/2*(Medium1.specificHeatCapacityCp(subCooled)+Medium1.specificHeatCapacityCp(outlet));
 NTU_tp = AU_tp_wf/C_dot_tp;
 epsilon_tp = 1-exp(-NTU_tp);
 Q_tp_wf = epsilon_tp*C_dot_tp*(Tw_tp -T_tp);
-pinch_tp_wf = Tw_tp - T_tp;
+
+//pinch_tp_wf = Tw_tp - T_tp;
 
 /*Energy balance wall*/
- (c_w*M_w/LL)*(l_tp*der(Tw_tp) + (Tw_a - Tw_tp)*der(l_sc)) = Q_tp_sf - Q_tp_wf;
+ (c_w*M_w/LL)*(l_tp*der(Tw_tp) - (Tw_a - Tw_tp)*der(l_sc)) = Q_tp_sf - Q_tp_wf;
   Tw_tp = Tw_a + (Tw_2 - Tw_a)/2;
 
 /*Secondary fluid */
+   AU_tp_sf = 2*pi*rr*l_tp*U_sf;
    LMTD_tp_sf=  homotopy(ThermoCycle.Functions.LMTD_robust(Tsf_su - Tw_2, Tsf_a - Tw_a),max(0, pinch_tp_sf));
    pinch_tp_sf = min(Tsf_su - Tw_2,Tsf_a - Tw_a);
-   Q_tp_sf = AU_sf*LMTD_tp_sf;
-   Q_tp_sf = InFlow_sf.m_flow*c_sf*(Tsf_su - Tsf_a);
+   Q_tp_sf = AU_tp_sf*LMTD_tp_sf;
+   Q_tp_sf = m_dot_sf*c_sf*(Tsf_su - Tsf_a);
 
    outlet = Medium1.setState_ph(p_wf,h_ex);
    T_ex = Medium1.temperature(outlet);
@@ -241,7 +237,8 @@ m_dot_ex = -OutFlow_wf.m_flow;
 Tsf_su = inStream(InFlow_sf.T_outflow);
 Tsf_su = InFlow_sf.T_outflow;
 Tsf_ex = OutFlow_sf.T_outflow;
-InFlow_sf.m_flow = OutFlow_sf.m_flow;
+InFlow_sf.m_flow = m_dot_sf;
+ m_dot_sf = -OutFlow_sf.m_flow;
 InFlow_sf.p = OutFlow_sf.p;
   annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,
             -100},{100,100}}), graphics));

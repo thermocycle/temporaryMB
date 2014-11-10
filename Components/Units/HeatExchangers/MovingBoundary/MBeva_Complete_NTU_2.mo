@@ -1,5 +1,5 @@
 within Components.Units.HeatExchangers.MovingBoundary;
-model MBeva_Complete_NTU
+model MBeva_Complete_NTU_2
   "Counter current Moving Boundary model: Fluid enters subcooled and exits in super-heated conditons. The model consider the fluid in one side and the metal wall. The secondary fluid is a constant specfic heat fluid"
 
 /**************** MEDIUM ***************************/
@@ -403,18 +403,18 @@ drhdt_TP = (   Void*(  drdp_VS*h_VS + rho_VS*drdp_VS)   + (1-Void)*(  h_LS*drdp_
 /**************************************************************************************************************/
 
 /************ MassBalance SUPER-HEATED ****************/
-  A*(  L_SH*drdt_SH + (rho_VS - rho_SH)*(der(L_SB)+der(L_TP))) = M_dot_B - M_dot_ex;
+  A*(  L_SH*drdt_SH - (rho_VS - rho_SH)*(der(L_SH))) = M_dot_B - M_dot_ex;
 
   drdt_SH = (drdp_SH +(1/2)*drdh_SH*dhdp_VS)*der(p) +(1/2)*drdh_SH*der(h_EX);
 
 /********** EnergyBalance SUPER-HEATED ******************/
-A*L_SH*(  rho_SH*dhdt_SH + h_SH*drdt_SH - der(p))   +
-A*( rho_VS*h_VS - rho_SH*h_SH) *( der(L_SB) + der(L_TP))  = M_dot_B*h_VS - M_dot_ex*h_EX + Q_SH;
+A*L_SH*(  rho_SH*dhdt_SH + h_SH*drdt_SH - der(p))   -
+A*( rho_VS*h_VS - rho_SH*h_SH) *( der(L_SH))  = M_dot_B*h_VS - M_dot_ex*h_EX + Q_SH;
 
 dhdt_SH = (1/2)*( dhdp_VS*der(p) + der(h_EX));
 
 /*******  WallEnergyBalance SUPER-HEATED **********/
-(c_wall*M_tot/L)*( L_SH*der(TwSH) + (TwB -TwSH)*(der(L_SB)+ der(L_TP)))  = Qsf_SH - Q_SH;
+(c_wall*M_tot/L)*( L_SH*der(TwSH) - (TwB -TwSH)*(der(L_SH)))  = Qsf_SH - Q_SH;
 
 /**** SecondaryFluid EnergyBalance SUB-COOLED********************/
 
@@ -566,4 +566,4 @@ condition to calculate the length of each section.
          <li> The heat transfer between the secondary fluid and the metal wall and between the metal wall and the primary fluid is computed using the epsilon-NTU method
          </ul>
         </HTML>"));
-end MBeva_Complete_NTU;
+end MBeva_Complete_NTU_2;
