@@ -10,9 +10,9 @@ annotation (choicesAllMatching = true);
 
 /***************** PORTS ******************/
   ThermoCycle.Interfaces.Fluid.FlangeA InFlow( redeclare package Medium = Medium)
-    annotation (Placement(transformation(extent={{-110,-70},{-90,-50}}),
+    annotation (Placement(transformation(extent={{-108,-74},{-88,-54}})));
   ThermoCycle.Interfaces.Fluid.FlangeB OutFlow( redeclare package Medium = Medium)
-    annotation (Placement(transformation(extent={{90,-70},{110,-50}}),
+    annotation (Placement(transformation(extent={{90,-74},{110,-54}})));
   ThermoCycle.Interfaces.Fluid.Flange_ex_Cdot OutFlow_sf
     annotation (Placement(transformation(extent={{-110,50},{-90,70}})));
     ThermoCycle.Interfaces.Fluid.Flange_Cdot InFlow_sf
