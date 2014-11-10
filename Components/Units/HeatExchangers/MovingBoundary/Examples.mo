@@ -91,7 +91,7 @@ package Examples "Examples for how to use the components from this package"
 
     model WallSegmentCutFlow_tester
 
-    replaceable package Medium = ThermoCycle.Media.R245faCool (
+    replaceable package Medium = ThermoCycle.Media.R245fa_CP (
     ThermoStates=Modelica.Media.Interfaces.PartialMedium.Choices.IndependentVariables.ph)
       constrainedby Modelica.Media.Interfaces.PartialMedium
     annotation (choicesAllMatching = true);
@@ -174,7 +174,7 @@ package Examples "Examples for how to use the components from this package"
 
     model WallSegmentCut2Flow_tester
 
-    replaceable package Medium = ThermoCycle.Media.R245faCool (
+    replaceable package Medium = ThermoCycle.Media.R245fa_CP (
     ThermoStates=Modelica.Media.Interfaces.PartialMedium.Choices.IndependentVariables.ph)
       constrainedby Modelica.Media.Interfaces.PartialMedium
     annotation (choicesAllMatching = true);

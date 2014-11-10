@@ -20,5 +20,8 @@ MBeva_LMTD
 MBeva_Complete
 MBeva_sf
 MBeva_Complete_NTU
+MBeva_Complete_NTU_Switching
+MovingBoundaryFlooded
 Test_MBeva
 Test_MBevaCompare
+MovingBoundaryFlooded_NTU

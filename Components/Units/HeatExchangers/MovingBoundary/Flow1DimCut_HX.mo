@@ -2,7 +2,7 @@ within Components.Units.HeatExchangers.MovingBoundary;
 model Flow1DimCut_HX
   "1-D fluid flow model (lumped, real fluid, variable length)"
   import Components;
-replaceable package Medium = ThermoCycle.Media.R245faCool constrainedby
+replaceable package Medium = ThermoCycle.Media.R245fa_CP  constrainedby
     Modelica.Media.Interfaces.PartialMedium
 annotation (choicesAllMatching = true);
 //Modelica.Media.Interfaces.PartialTwoPhaseMedium
