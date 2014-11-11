@@ -35,11 +35,13 @@ model MBCell_Base "1-D lumped fluid flow model with variable length"
   /* Balance variables */
   Modelica.SIunits.MassFlowRate M_dot_a(start=Mdotnom);
   Modelica.SIunits.MassFlowRate M_dot_b(start=Mdotnom);
-  Modelica.SIunits.MassFlowRate dMdt(start=0) "Change in mass in control volume";
+  Modelica.SIunits.MassFlowRate dMdt(start=0)
+    "Change in mass in control volume";
 
   Modelica.SIunits.HeatFlowRate H_dot_a(start=Mdotnom*hstart);
   Modelica.SIunits.HeatFlowRate H_dot_b(start=Mdotnom*hstart);
-  Modelica.SIunits.HeatFlowRate dUdt(start=0) "Change in energy in control volume";
+  Modelica.SIunits.HeatFlowRate dUdt(start=0)
+    "Change in energy in control volume";
 
   /* State variables */
   Medium.AbsolutePressure pp(start=pstart);
@@ -93,10 +95,14 @@ model MBCell_Base "1-D lumped fluid flow model with variable length"
   /* Partial derivatives of fluid properties */
   Modelica.SIunits.DerDensityByEnthalpy drdh "Fluid state - rho deriv wrt h";
   Modelica.SIunits.DerDensityByPressure drdp "Fluid state - rho deriv wrt p";
-  Modelica.SIunits.DerEnthalpyByPressure dhdp_l "Saturated liquid - h deriv wrt p";
-  Modelica.SIunits.DerEnthalpyByPressure dhdp_v "Saturated vapour - h deriv wrt p";
-  Modelica.SIunits.DerEnthalpyByPressure drdp_l "Saturated liquid - rho deriv wrt p";
-  Modelica.SIunits.DerEnthalpyByPressure drdp_v "Saturated vapour - rho deriv wrt p";
+  Modelica.SIunits.DerEnthalpyByPressure dhdp_l
+    "Saturated liquid - h deriv wrt p";
+  Modelica.SIunits.DerEnthalpyByPressure dhdp_v
+    "Saturated vapour - h deriv wrt p";
+  Modelica.SIunits.DerEnthalpyByPressure drdp_l
+    "Saturated liquid - rho deriv wrt p";
+  Modelica.SIunits.DerEnthalpyByPressure drdp_v
+    "Saturated vapour - rho deriv wrt p";
 
   /* Total derivatives of fluid properties */
   Real drdt "Fluid state - rho deriv wrt time";

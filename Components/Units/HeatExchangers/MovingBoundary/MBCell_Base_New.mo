@@ -1,5 +1,6 @@
 within Components.Units.HeatExchangers.MovingBoundary;
-partial model MBCell_Base_New "1-D lumped fluid flow model with variable length"
+partial model MBCell_Base_New
+  "1-D lumped fluid flow model with variable length"
   replaceable package Medium = ThermoCycle.Media.DummyFluid constrainedby
     Modelica.Media.Interfaces.PartialMedium annotation (choicesAllMatching=true);
 
@@ -35,11 +36,13 @@ partial model MBCell_Base_New "1-D lumped fluid flow model with variable length"
   /* Balance variables */
   Modelica.SIunits.MassFlowRate M_dot_a(start=Mdotnom);
   Modelica.SIunits.MassFlowRate M_dot_b(start=Mdotnom);
-  Modelica.SIunits.MassFlowRate dMdt(start=0) "Change in mass in control volume";
+  Modelica.SIunits.MassFlowRate dMdt(start=0)
+    "Change in mass in control volume";
 
   Modelica.SIunits.HeatFlowRate H_dot_a(start=Mdotnom*hstart);
   Modelica.SIunits.HeatFlowRate H_dot_b(start=Mdotnom*hstart);
-  Modelica.SIunits.HeatFlowRate dUdt(start=0) "Change in energy in control volume";
+  Modelica.SIunits.HeatFlowRate dUdt(start=0)
+    "Change in energy in control volume";
 
   /* Fluid property records, original states */
   Medium.ThermodynamicState fluidState =  Medium.setState_ph(pp,hh);
