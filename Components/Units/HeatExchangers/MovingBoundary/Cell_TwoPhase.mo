@@ -1,5 +1,5 @@
 within Components.Units.HeatExchangers.MovingBoundary;
-model Cell_TwoPhase "1-D lumped fluid flow model (Real fluid model)"
+model Cell_TwoPhase "1-D lumped fluid flow model for two-phase flow"
 replaceable package Medium = ThermoCycle.Media.DummyFluid constrainedby
     Modelica.Media.Interfaces.PartialMedium
 annotation (choicesAllMatching = true);
@@ -29,108 +29,121 @@ parameter Modelica.SIunits.Pressure pstart "Fluid pressure start value"
   parameter Medium.SpecificEnthalpy hstart=1E5 "Start value of enthalpy"
     annotation (Dialog(tab="Initialization"));
 
-/****************** ControlVolume Options  ***********************/
-import Components.Units.HeatExchangers.MovingBoundary.Enumerations.OnePhase;
-parameter OnePhase PhaseSelection=OnePhase.SC;
-
 /***************  VARIABLES ******************/
   Modelica.SIunits.Length ll;
-  Medium.ThermodynamicState  fluidState;
   Medium.SaturationProperties sat;
   Medium.AbsolutePressure pp(start=pstart);
   Modelica.SIunits.MassFlowRate M_dot_a(start=Mdotnom);
   Modelica.SIunits.MassFlowRate M_dot_b(start=Mdotnom);
-  Medium.SpecificEnthalpy hh(start=hstart)
-    "Fluid specific enthalpy at the cells";
   Medium.Temperature TT "Fluid temperature";
-  Medium.Density rho "Fluid cell density";
   Medium.Density rho_a "Fluid cell density";
   Medium.Density rho_b "Fluid cell density";
   Medium.Density rho_l "Fluid cell density";
   Medium.Density rho_v "Fluid cell density";
-  Modelica.SIunits.DerDensityByEnthalpy drdh
-    "Derivative of density by enthalpy";
-  Modelica.SIunits.DerDensityByPressure drdp
-    "Derivative of density by pressure";
   Modelica.SIunits.SpecificEnthalpy h_b(start=hstart)
     "Enthalpy state variable at inlet node";
   Modelica.SIunits.SpecificEnthalpy h_a(start=hstart)
     "Enthalpy state variable at outlet node";
-  Real  Drho_dt;
-  Real Dh_dt;
-  Real Dh_dt_a;
-  Real Dh_dt_b;
+  Real dhdt_a;
+  Real dhdt_b;
   Real Dz_a;
   Real Dz_b;
   Modelica.SIunits.SpecificEnthalpy h_l;
   Modelica.SIunits.SpecificEnthalpy h_v;
   Modelica.SIunits.DerEnthalpyByPressure dhdp_l "TP:SatLiq - h deriv wrt p";
   Modelica.SIunits.DerEnthalpyByPressure dhdp_v;
- Real AU;
- Real C_dot;
- Real NTU;
- Real epsilon;
- Real q_dot;
+  Modelica.SIunits.DerDensityByPressure drdp_l "TP: SatLiq - D deriv wrt p ";
+  Modelica.SIunits.DerDensityByPressure drdp_v "TP: SatVap - D deriv wrt p";
+  Real q_dot;
+
+ Real dVVdt;
+ Real VV;
+ Real Gamma_a;
+ Real Gamma_b;
+ Real GG;
+ Real Dh_ab;
+ Real Dh_lv;
+ Real Dr_lv;
+ Real Theta_a;
+ Real Theta_b;
+ Real Dh_ab_lv;
+ Real dVVdp;
+ Real dVVdha;
+ Real dVVdhb;
   ThermoCycle.Interfaces.HeatTransfer.ThermalPortL thermalPortL
     annotation (Placement(transformation(extent={{-20,40},{20,60}})));
 
 equation
   /* Fluid Properties */
   sat = Medium.setSat_p(pp);
+  TT = Medium.saturationTemperature_sat(sat);
   h_v = Medium.dewEnthalpy(sat);
   h_l = Medium.bubbleEnthalpy(sat);
   rho_v =  Medium.dewDensity(sat);
   rho_l = Medium.bubbleDensity(sat);
   dhdp_l = Medium.dBubbleEnthalpy_dPressure(sat);
   dhdp_v = Medium.dDewEnthalpy_dPressure(sat);
-  fluidState = Medium.setState_ph(pp,hh);
-  drdh = Medium.density_derh_p(fluidState);
-  drdp = Medium.density_derp_h(fluidState);
-  TT = Medium.temperature(fluidState);
-  rho = Medium.density(fluidState);
+  drdp_l = Medium.dBubbleDensity_dPressure(sat);
+  drdp_v = Medium.dDewDensity_dPressure(sat);
 
-hh = 1/2*(h_a+h_b);
 /* MASS BALANCE */
-AA*(ll*Drho_dt + rho*der(ll)) +rho_a*AA*Dz_a - rho_b*AA*Dz_b = M_dot_a - M_dot_b;
-
-Drho_dt = drdp*der(pp) + 1/2*drdh*(Dh_dt_a+Dh_dt_b);
+AA*(ll*der(ll)*(VV*rho_v + (1-VV)*rho_l) + ll*(dVVdt*(rho_v - rho_l)+VV*drdp_v*der(pp) + (1-VV)*drdp_l*der(pp)))
++ rho_a*AA*Dz_a - rho_b*AA*Dz_b = M_dot_a - M_dot_b;
 
 /* ENERGY BALANCE */
-AA*(rho*hh*der(ll) + rho*ll*Dh_dt + Drho_dt*hh*ll) - AA*ll*der(pp) +AA*h_a*rho_a*Dz_a - AA*h_b*rho_b*Dz_b = M_dot_a*h_a - M_dot_b*h_b + q_dot;
-Dh_dt = 1/2*(Dh_dt_a + Dh_dt_b);
+AA*(der(ll)*(VV*rho_v*h_v + (1-VV)*rho_l*h_l) + ll*(dVVdt*(rho_v*h_v - rho_l*h_l)+VV*drdp_v*der(pp)*h_v
++VV*rho_v*dhdp_v*der(pp) +(1-VV)*drdp_l*der(pp)*h_l +(1-VV)*rho_l*dhdp_l*der(pp))) - AA*ll*der(pp) +AA*rho_a*h_a*Dz_a -
+AA*rho_b*h_b*Dz_b = M_dot_a*h_a - M_dot_b*h_b +q_dot;
 
-  AU = 2*pi*rr*ll*Unom;
-  C_dot = (M_dot_a+M_dot_b)/2*Medium.specificHeatCapacityCp(fluidState);
-  NTU = AU/C_dot;
-  epsilon =  1 - exp(-NTU);
+/* Void fraction */
+Dh_ab = h_a - h_b;
+Dh_lv = h_l - h_v;
+Dr_lv = rho_l - rho_v;
+Gamma_a = Components.Units.HeatExchangers.MovingBoundary.Functions.Gamma(hh=  h_a, rho_l= rho_l,rho_v=  rho_v, h_l=  h_l, h_v= h_v);
+Gamma_b = Components.Units.HeatExchangers.MovingBoundary.Functions.Gamma(hh=  h_b, rho_l= rho_l,rho_v=  rho_v, h_l=  h_l, h_v= h_v);
+GG = Gamma_a/Gamma_b;
+Theta_a =Components.Units.HeatExchangers.MovingBoundary.Functions.Theta( hh=  h_a, h_l=  h_l,drdp_l=  drdp_l, rho_l=  rho_l,  dhdp_l= dhdp_l,h_v=  h_v, drdp_v=  drdp_v, rho_v=  rho_v, dhdp_v=  dhdp_v);
+Theta_b =Components.Units.HeatExchangers.MovingBoundary.Functions.Theta(hh=  h_b, h_l=  h_l,drdp_l=  drdp_l, rho_l=  rho_l,  dhdp_l= dhdp_l,h_v=  h_v, drdp_v=  drdp_v, rho_v=  rho_v, dhdp_v=  dhdp_v);
+Dh_ab_lv = - Dh_ab + Dh_lv*log(GG);
 
-  //q_dot = AU*(T_wall - TT);
+/* Void fraction */
+VV = (rho_l^2*(h_a - h_b) +rho_l*rho_v*(h_b - h_a + (h_l -h_v)*log(GG)))/((h_a - h_b)*(rho_l - rho_v)^2);
+
+/* Void fraction derivative wrt time */
+dVVdt = dVVdp*der(pp) +dVVdha*dhdt_a + dVVdhb*dhdt_b;
+
+/* Void fraction derivative wrt p */
+dVVdp = drdp_l/(Dh_ab*Dr_lv^2)*(Dh_ab*rho_l + rho_v*Dh_ab_lv) -
+ 2*rho_l*(drdp_l -drdp_v)/(Dh_ab*Dr_lv^3)*(Dh_ab*rho_l + Dh_ab_lv*rho_v) +
+rho_l/(Dh_ab*Dh_lv^2)*( Dh_ab*drdp_l +drdp_v*Dh_ab_lv +
+rho_v*((dhdp_l -dhdp_v)*log(GG) +Dh_lv/Gamma_a*(Theta_a - GG*Theta_b)));
+
+/* Void fraction derivative wrt h_a */
+dVVdha = - rho_l/(Dh_ab^2*Dr_lv^2)*(Dh_ab*rho_l +rho_v*Dh_ab_lv) +
+rho_l/(Dh_ab*Dr_lv^2)*(rho_l + rho_v*(-1 + Dh_lv*Dr_lv/Gamma_a));
+
+/* Void fraction derivative wrt h_b */
+dVVdhb = +rho_l/(Dh_ab^2*Dr_lv^2)*(Dh_ab*rho_l +rho_v*Dh_ab_lv) +
+rho_l/(Dh_ab*Dr_lv^2)*(-rho_l +rho_v*(1 - Dh_lv*Dr_lv/Gamma_b));
 
 q_dot = thermalPortL.phi*(2*pi*rr*ll);
 TT = thermalPortL.T;
-if (PhaseSelection == OnePhase.SC) then
-rho_b = rho_l;
-rho_a = rho_v;
-Dz_a = 0;
-Dz_b = der(ll);
-Dh_dt_a = der(InFlow.h_outflow);
-Dh_dt_b = dhdp_l*der(pp);
-h_b = h_v;
-else
-rho_b = rho_l;
-rho_a = rho_v;
-Dz_a = der(ll);
-Dz_b = 0;
-Dh_dt_a = dhdp_v*der(pp);
-Dh_dt_b = der(OutFlow.h_outflow);
-h_a = h_v;
-end if;
+
+rho_a = Medium.density_ph(pp,h_a);
+rho_b = Medium.density_ph(pp,h_b);
+Dz_a = -der(ll);
+Dz_b = +der(ll);
+h_a = h_l;
+//h_b = h_v;
+dhdt_b = +der(h_b);
+dhdt_a = +der(h_a);
 
 //* BOUNDARY CONDITIONS *//
- /* Enthalpies */
- h_a = inStream(InFlow.h_outflow);
-  InFlow.h_outflow = h_a;
-  OutFlow.h_outflow = h_b;
+/* Enthalpies */
+h_a = inStream(InFlow.h_outflow);
+InFlow.h_outflow = h_a;
+h_b = inStream(OutFlow.h_outflow);
+OutFlow.h_outflow = h_b;
 
 /* pressures */
  pp = OutFlow.p;

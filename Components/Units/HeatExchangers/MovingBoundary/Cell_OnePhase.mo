@@ -109,15 +109,15 @@ Dh_dt = 1/2*(Dh_dt_a + Dh_dt_b);
 q_dot = thermalPortL.phi*(2*pi*rr*ll);
 TT = thermalPortL.T;
 if (PhaseSelection == OnePhase.SC) then
-rho_b = rho_l;
-rho_a = rho_v;
+rho_b = rho_v; /* Fictisus value not use in the equation */
+rho_a = rho_l;
 Dz_a = 0;
 Dz_b = der(ll);
 Dh_dt_a = der(InFlow.h_outflow);
 Dh_dt_b = dhdp_l*der(pp);
 h_b = h_v;
 else
-rho_b = rho_l;
+rho_b = rho_l;  /* Fictisus value not use in the equation */
 rho_a = rho_v;
 Dz_a = der(ll);
 Dz_b = 0;
