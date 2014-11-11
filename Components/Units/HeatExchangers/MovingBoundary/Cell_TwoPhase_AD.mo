@@ -1,5 +1,5 @@
 within Components.Units.HeatExchangers.MovingBoundary;
-model Cell_TwoPhase "1-D lumped fluid flow model for two-phase flow"
+model Cell_TwoPhase_AD "1-D lumped fluid flow model for two-phase flow"
 replaceable package Medium = ThermoCycle.Media.DummyFluid constrainedby
     Modelica.Media.Interfaces.PartialMedium
 annotation (choicesAllMatching = true);
@@ -201,4 +201,4 @@ OutFlow.Xi_outflow = inStream(InFlow.Xi_outflow);
  </ul>
  <p><big> 
         </HTML>"));
-end Cell_TwoPhase;
+end Cell_TwoPhase_AD;
