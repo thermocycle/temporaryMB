@@ -1,6 +1,6 @@
 within Components.Units.Test;
 model Test_TwoPhase
-replaceable package Medium = ThermoCycle.Media.Water;
+replaceable package Medium = Components.Media.WaterCoolProp;
   ThermoCycle.Components.FluidFlow.Reservoirs.SourceMdot sourceMdot( redeclare
       package Medium =                                                                          Medium,
     Mdot_0=1,

@@ -1,4 +1,4 @@
-within Components.Units.HeatExchangers.MovingBoundary;
+within Components.Units.HeatExchangers.MovingBoundary.Obsolete;
 model MBCell_SC "Subcooled cell"
   extends MBCell_Base_New;
 
@@ -34,4 +34,3 @@ equation
 // inFlow.p = pp;
 outFlow.h_outflow = h_b;
 end MBCell_SC;
-

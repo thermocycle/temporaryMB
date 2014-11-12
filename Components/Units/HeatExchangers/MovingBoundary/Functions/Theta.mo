@@ -9,7 +9,7 @@ function Theta
   input Real drdp_v;
   input Real rho_v;
   input Real dhdp_v;
+  output Real Theta;
 algorithm
-Theta:= (hh - h_l)*drdp_l - rho_l*dhdp_l +(h_v - hh)*drdp_v +rho_v*dhdp_v;
-
+  Theta:= (hh - h_l)*drdp_l - rho_l*dhdp_l +(h_v - hh)*drdp_v +rho_v*dhdp_v;
 end Theta;

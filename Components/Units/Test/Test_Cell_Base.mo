@@ -6,8 +6,8 @@ replaceable package Medium = Components.Media.WaterCoolProp;
   Modelica.Blocks.Sources.Constant const(k=80000)
     annotation (Placement(transformation(extent={{-68,66},{-48,86}})));
   ThermoCycle.Components.FluidFlow.Reservoirs.SinkP sinkP(redeclare package
-      Medium =                                                                                  Medium, p0
-      =100000)
+      Medium =                                                                                  Medium, p0=
+       100000)
     annotation (Placement(transformation(extent={{66,-12},{86,8}})));
   Modelica.Blocks.Sources.Ramp ramp(
     startTime=250,
