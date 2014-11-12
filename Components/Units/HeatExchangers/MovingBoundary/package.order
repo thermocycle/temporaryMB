@@ -36,3 +36,7 @@ Cell_OnePhase
 Cell_OnePhase_Base
 Cell_SuperHeated
 Cell_SubCooled
+Cell_OnePhase_Base_SC
+Cell_OnePhase_Base_SH
+Cell_TwoPhase_Base
+Enumerations

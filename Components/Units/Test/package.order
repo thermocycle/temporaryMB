@@ -24,3 +24,7 @@ Test_Cell_Test
 Test_Cell_Base
 Test_Cell_SubCooled
 Test_Cell_SuperHeated
+Test_GG
+Test_OnePhase_Base_SC
+Test_OnePhase_Base_SH
+Test_TwoPhase_Base
