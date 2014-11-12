@@ -1,7 +1,7 @@
 within Components.Units.Test;
 model Test_GG
 
-replaceable package Medium = ThermoCycle.Media.Water constrainedby
+replaceable package Medium = Components.Media.WaterCoolProp constrainedby
     Modelica.Media.Interfaces.PartialMedium
 annotation (choicesAllMatching = true);
 

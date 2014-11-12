@@ -6,7 +6,7 @@ replaceable package Medium = Components.Media.WaterCoolProp;
     Mdot_0=1,
     p=100000,
     T_0=373.15)
-    annotation (Placement(transformation(extent={{-92,-8},{-72,12}})));
+    annotation (Placement(transformation(extent={{-100,-8},{-80,12}})));
   ThermoCycle.Components.HeatFlow.Sources.HeatSource_cell heatSource_cell
     annotation (Placement(transformation(extent={{-20,46},{0,66}})));
   Modelica.Blocks.Sources.Constant const(k=1000)
@@ -22,7 +22,7 @@ replaceable package Medium = Components.Media.WaterCoolProp;
     Unom=100,
     hstart=417500,
     pstart=100000)
-              annotation (Placement(transformation(extent={{-14,-18},{24,24}})));
+              annotation (Placement(transformation(extent={{-20,-20},{18,22}})));
   ThermoCycle.Components.Units.PdropAndValves.Valve valve(redeclare package
       Medium =                                                                                  Medium,
     UseNom=true,
@@ -37,16 +37,16 @@ equation
       color={0,0,127},
       smooth=Smooth.None));
   connect(sourceMdot.flangeB, cell_TwoPhase.InFlow) annotation (Line(
-      points={{-73,2},{-50,2},{-50,3},{-14,3}},
+      points={{-81,2},{-50,2},{-50,1},{-20,1}},
       color={0,0,255},
       smooth=Smooth.None));
   connect(heatSource_cell.thermalPort, cell_TwoPhase.thermalPortL) annotation (
       Line(
-      points={{-10.1,51.9},{-10.1,36},{-2,36},{-2,13.5},{5,13.5}},
+      points={{-10.1,51.9},{-10.1,36},{-2,36},{-2,11.5},{-1,11.5}},
       color={255,0,0},
       smooth=Smooth.None));
   connect(cell_TwoPhase.OutFlow, valve.InFlow) annotation (Line(
-      points={{24,3.21},{23,3.21},{23,4},{33,4}},
+      points={{18,1.21},{23,1.21},{23,4},{33,4}},
       color={0,0,255},
       smooth=Smooth.None));
   connect(valve.OutFlow, sinkP.flangeB) annotation (Line(

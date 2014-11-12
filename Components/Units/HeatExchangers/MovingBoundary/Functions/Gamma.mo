@@ -7,5 +7,5 @@ input Real h_l;
 input Real h_v;
 output Real Gamma;
 algorithm
-Gamma:= rho_l*(hh -h_l) + rho_v*(h_v - h_l);
+Gamma:= max(Modelica.Constants.small,rho_l*(hh -h_l) + rho_v*(h_v - h_l));
 end Gamma;
