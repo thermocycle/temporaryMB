@@ -22,7 +22,15 @@ equation
   dhdt_b = Medium.dBubbleEnthalpy_dPressure(satState)*dpdt;
   rho_b  = Medium.bubbleDensity(satState);
 
-  inFlow.h_outflow = h_a;
-  outFlow.h_outflow = h_b;
+//* BOUNDARY CONDITIONS *//
+ /* Enthalpies */
+// h_a = inStream(inFlow.h_outflow);
+//  inFlow.h_outflow = h_a;
+//  outFlow.h_outflow = h_b;
 
+/* pressures */
+// p_b = outFlow.p;
+ pp = p_b;
+// inFlow.p = pp;
+outFlow.h_outflow = h_b;
 end MBCell_SC;

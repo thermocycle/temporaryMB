@@ -1,34 +1,37 @@
 within Components.Units.HeatExchangers.MovingBoundary;
-partial model MBCell_Base_New
-  "1-D lumped fluid flow model with variable length"
-  replaceable package Medium = ThermoCycle.Media.DummyFluid constrainedby
-    Modelica.Media.Interfaces.PartialMedium annotation (choicesAllMatching=true);
+model Cell_OnePhase_Full "1-D lumped fluid flow model (Real fluid model)"
+replaceable package Medium = ThermoCycle.Media.DummyFluid constrainedby
+    Modelica.Media.Interfaces.PartialMedium
+annotation (choicesAllMatching = true);
 
   /************ Thermal and fluid ports ***********/
-  ThermoCycle.Interfaces.Fluid.FlangeA inFlow(redeclare package Medium = Medium)
-    annotation (Placement(transformation(extent={{-110,-10},{-90,10}}),
+ ThermoCycle.Interfaces.Fluid.FlangeA inFlow(redeclare package Medium =
+        Medium)
+    annotation (Placement(transformation(extent={{-100,-10},{-80,10}}),
         iconTransformation(extent={{-120,-20},{-80,20}})));
-  ThermoCycle.Interfaces.Fluid.FlangeB outFlow(redeclare package Medium =
-        Medium) annotation (Placement(transformation(extent={{90,-10},{110,10}}),
-        iconTransformation(extent={{80,-20},{120,20}})));
+ ThermoCycle.Interfaces.Fluid.FlangeB outFlow(redeclare package Medium =
+        Medium)
+    annotation (Placement(transformation(extent={{80,-10},{100,10}}),
+        iconTransformation(extent={{80,-18},{120,20}})));
 
   /************ Geometric characteristics **************/
   constant Real pi=Modelica.Constants.pi "pi-greco";
   parameter Modelica.SIunits.Area AA "Cross sectional area";
   final parameter Modelica.SIunits.Length rr=sqrt(AA/pi) "radius of the tube";
   parameter Modelica.SIunits.MassFlowRate Mdotnom=0 "Nominal fluid flow rate";
-  parameter Modelica.SIunits.CoefficientOfHeatTransfer Unom=250
-    "if HTtype = LiqVap : Heat transfer coefficient, liquid zone ";
+  parameter Modelica.SIunits.CoefficientOfHeatTransfer Unom=250;
 
   /************ FLUID INITIAL VALUES ***************/
   parameter Modelica.SIunits.Pressure pstart "Fluid pressure start value"
     annotation (Dialog(tab="Initialization"));
   parameter Medium.SpecificEnthalpy hstart=1E5 "Start value of enthalpy"
     annotation (Dialog(tab="Initialization"));
+  parameter Modelica.SIunits.Length lstart=1 "Start value of length"
+    annotation (Dialog(tab="Initialization"));
 
   /***************  VARIABLES ******************/
   /* Geometry */
-  Modelica.SIunits.Length ll "Lenght of this segment";
+  Modelica.SIunits.Length ll(start=lstart) "Lenght of this segment";
   Modelica.SIunits.Velocity dldt "Change of the length with time";
   Modelica.SIunits.Velocity dzdt_a "Change of the inlet position with time";
   Modelica.SIunits.Velocity dzdt_b "Change of the outlet position with time";
@@ -38,7 +41,6 @@ partial model MBCell_Base_New
   Modelica.SIunits.MassFlowRate M_dot_b(start=Mdotnom);
   Modelica.SIunits.MassFlowRate dMdt(start=0)
     "Change in mass in control volume";
-
   Modelica.SIunits.HeatFlowRate H_dot_a(start=Mdotnom*hstart);
   Modelica.SIunits.HeatFlowRate H_dot_b(start=Mdotnom*hstart);
   Modelica.SIunits.HeatFlowRate dUdt(start=0)
@@ -49,25 +51,33 @@ partial model MBCell_Base_New
   Medium.SaturationProperties satState =  Medium.setSat_p(pp);
 
   /* Shorter notation for later access */
-  Medium.AbsolutePressure pp "Fluid pressure, mean";
-  Medium.AbsolutePressure p_a "Fluid pressure at inlet";
-  Medium.AbsolutePressure p_b "Fluid pressure at outlet";
+  Medium.AbsolutePressure pp(start=pstart) "Fluid pressure, mean";
+  Medium.AbsolutePressure p_a(start=pstart) "Fluid pressure at inlet";
+  Medium.AbsolutePressure p_b(start=pstart) "Fluid pressure at outlet";
+
   Medium.SpecificEnthalpy hh(start=hstart) "Fluid enthalpy, mean";
   Medium.SpecificEnthalpy h_a "Fluid enthalpy at inlet";
   Medium.SpecificEnthalpy h_b "Fluid enthalpy at outlet";
+  Medium.SpecificEnthalpy h_l "Fluid enthalpy, saturated liquid";
+  Medium.SpecificEnthalpy h_v "Fluid enthalpy, saturated vapour";
+
   Medium.Density rho "Fluid density, mean";
   Medium.Density rho_a "Fluid density at inlet";
   Medium.Density rho_b "Fluid density at outlet";
+  Medium.Density rho_l "Fluid density, saturated liquid";
+  Medium.Density rho_v "Fluid density, saturated vapour";
   Medium.Temperature TT "Fluid temperature, mean";
 
   /* Partial derivatives of fluid properties */
   Modelica.SIunits.DerDensityByEnthalpy drdh "Fluid state - rho deriv wrt h";
   Modelica.SIunits.DerDensityByPressure drdp "Fluid state - rho deriv wrt p";
+  Modelica.SIunits.DerEnthalpyByPressure dhdp_l;
+  Modelica.SIunits.DerEnthalpyByPressure dhdp_v;
 
   /* Total derivatives of fluid properties */
   Real drdt "Fluid state - rho deriv wrt time";
-  Real dhdt "Fluid state - h deriv wrt time";
   Real dpdt "Fluid state - p deriv wrt time";
+  Real dhdt "Fluid state - h deriv wrt time";
   Real dhdt_a "Inlet state - h deriv wrt time";
   Real dhdt_b "Outlet state - h deriv wrt time";
 
@@ -75,33 +85,59 @@ partial model MBCell_Base_New
   Modelica.SIunits.Volume VV = AA*ll "Control volume";
   Modelica.SIunits.Mass MM = rho*VV "Mass in control volume";
 
-  /* Heat transfer */
-  Real q_dot;
+ Real AU;
+ Real C_dot;
+ Real NTU;
+ Real epsilon;
+ Real q_dot;
   ThermoCycle.Interfaces.HeatTransfer.ThermalPortL thermalPortL
     annotation (Placement(transformation(extent={{-20,40},{20,60}})));
 
+  /* Output */
+  Modelica.SIunits.Length ll_out;
+
 equation
+  if (h_a>=h_l) then
+    ll_out = 0;
+    rho_b = rho_a;
+    rho_a = Medium.density_ph(pp,h_a);
+    dzdt_a = 0;
+    dhdt_a = der(inFlow.h_outflow);
+    dhdt_b = dhdt_a;
+    h_b = h_a;
+  else
+    ll_out = ll;
+    rho_b = rho_l; /* Fictisus value not use in the equation */
+    rho_a = Medium.density_ph(pp,h_a);
+    dzdt_a = 0;
+    dhdt_a = der(inFlow.h_outflow);
+    dhdt_b = dhdp_l*dpdt;
+    h_b = h_l;
+  end if;
+
+  dldt = der(ll);
+  dzdt_b = dldt;
+
+  /* Fluid Properties */
+  hh = 1/2*(h_a + h_b);
+  pp = 1/2*(p_a + p_b);
+
   /* Shorter notation for later access */
-  rho  = Medium.density(fluidState);
-  TT   = Medium.temperature(fluidState);
+  TT = Medium.temperature(fluidState);
+  rho = Medium.density(fluidState);
   drdh = Medium.density_derh_p(fluidState);
   drdp = Medium.density_derp_h(fluidState);
-
-  /* Total derivatives of fluid properties */
-  drdt = drdp*dpdt + drdh*dhdt;
-
-  //dhdt = der(hh);
-  dhdt = 1/2*(dhdt_a + dhdt_b);
-  //dhdt_a "Inlet state - h deriv wrt time";
-  //dhdt_b "Outlet state - h deriv wrt time";
-
   dpdt = der(pp);
-  //dpdt_a "Inlet state - p deriv wrt time";
-  //dpdt_b "Outlet state - p deriv wrt time";
+  drdt = drdp*dpdt + 1/2*drdh*(dhdt_a+dhdt_b);
+  dhdt = 1/2*(dhdt_a + dhdt_b);
 
-  /* Geometry change */
-  der(ll) = dldt;
-  //dldt = dzdt_a + dzdt_b;
+  /* Two-phase properties */
+  h_v = Medium.dewEnthalpy(satState);
+  h_l = Medium.bubbleEnthalpy(satState);
+  rho_v =  Medium.dewDensity(satState);
+  rho_l = Medium.bubbleDensity(satState);
+  dhdp_l = Medium.dBubbleEnthalpy_dPressure(satState);
+  dhdp_v = Medium.dDewEnthalpy_dPressure(satState);
 
   /* Mass balance */
   dMdt = M_dot_a - M_dot_b;
@@ -109,9 +145,13 @@ equation
 
   /* Energy balance */
   dUdt = H_dot_a - H_dot_b + q_dot "No work is done";
-   AA*(rho*dldt*hh + rho*ll*dhdt + drdt*ll*hh)
-  -AA*(ll*dpdt + h_a*rho_a*dzdt_a - h_b*rho_b*dzdt_b)
-  = dUdt;
+  rho*hh*dldt + rho*ll*dhdt + drdt*hh*ll - ll*dpdt + h_a*rho_a*dzdt_a - h_b*rho_b*dzdt_b = dUdt/AA;
+
+  /* Heat transfer */
+  AU = 2*pi*rr*ll*Unom;
+  C_dot = (M_dot_a+M_dot_b)/2*Medium.specificHeatCapacityCp(fluidState);
+  NTU = AU/C_dot;
+  epsilon =  1 - exp(-NTU);
 
   /* Energy boundaries */
   H_dot_a = M_dot_a*h_a;
@@ -119,15 +159,16 @@ equation
   q_dot   = thermalPortL.phi*(2*pi*rr*ll);
   TT      = thermalPortL.T;
 
-  /* Define flow boundaries, no more underscores */
+  //* BOUNDARY CONDITIONS *//
+  /* Enthalpies */
   h_a = inStream(inFlow.h_outflow);
-  h_b = inStream(outFlow.h_outflow);
+  inFlow.h_outflow = h_a;
+  outFlow.h_outflow = h_b;
+
+  /* pressures */
   p_b = outFlow.p;
   p_a = inFlow.p;
-
-  /* Define the fluid state */
-  hh = 1/2*(h_a + h_b);
-  pp = 1/2*(p_a + p_b);
+  p_a = outFlow.p;
 
   /* Mass and substance flows, no composition changes */
   M_dot_a = inFlow.m_flow;
@@ -139,18 +180,16 @@ equation
   assert(M_dot_a > -Modelica.Constants.small, "Flow reversal at inlet detected, this case is not tested.");
   assert(M_dot_b > -Modelica.Constants.small, "Flow reversal at outlet detected, this case is not tested.");
 
-  annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,
-            100}}), graphics),
-    Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,100}}),
-         graphics={Rectangle(
-          extent={{-100,40},{100,-40}},
-          lineColor={100,100,100},
-          fillPattern=FillPattern.Solid,
-          fillColor={175,255,200}),       Text(
-          extent={{-80,20},{80,-20}},
-          lineColor={0,0,0},
-          textString="MBCell")}),
-    Documentation(info="<HTML>
+  annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,
+            -100},{100,100}}),
+                      graphics), Icon(graphics={Rectangle(
+          extent={{-92,40},{88,-40}},
+          lineColor={0,0,255},
+          fillColor={0,255,255},
+          fillPattern=FillPattern.Solid), Text(
+          extent={{-88,24},{92,-20}},
+          lineColor={0,0,255},
+          textString="%Cell1D")}),Documentation(info="<HTML>
           
          <p><big>Model <b>Cell1Dim</b> describes the flow of fluid through a single cell. An overall flow model can be obtained by interconnecting several cells in series 
          (see <em><FONT COLOR=red><a href=\"modelica://ThermoCycle.Components.FluidFlow.Pipes.Flow1Dim\">Flow1Dim</a></FONT></em>).
@@ -187,4 +226,4 @@ equation
  </ul>
  <p><big> 
         </HTML>"));
-end MBCell_Base_New;
+end Cell_OnePhase_Full;
