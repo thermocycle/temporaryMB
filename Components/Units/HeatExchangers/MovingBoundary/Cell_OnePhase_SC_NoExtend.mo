@@ -1,5 +1,6 @@
 within Components.Units.HeatExchangers.MovingBoundary;
-model Cell_OnePhase_SC "1-D lumped fluid flow model (Real fluid model)"
+model Cell_OnePhase_SC_NoExtend
+  "1-D lumped fluid flow model (Real fluid model)"
 replaceable package Medium = ThermoCycle.Media.DummyFluid constrainedby
     Modelica.Media.Interfaces.PartialMedium
 annotation (choicesAllMatching = true);
@@ -213,4 +214,4 @@ equation
  </ul>
  <p><big> 
         </HTML>"));
-end Cell_OnePhase_SC;
+end Cell_OnePhase_SC_NoExtend;

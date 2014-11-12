@@ -20,5 +20,8 @@ MBFlooded_LMTD
 Test_MB_NTU
 Test_OnePhase
 Test_TwoPhase
-Test_OnePhase_Base
-Test_OnePhase_SC
+Test_Cell_Test
+Test_Cell_Base
+Test_Cell_SubCooled
+Test_Cell_SuperHeated
+Test_Cell_Base_NEw
