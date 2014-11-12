@@ -28,13 +28,15 @@ parameter Modelica.SIunits.Pressure pstart "Fluid pressure start value"
                                      annotation (Dialog(tab="Initialization"));
   parameter Medium.SpecificEnthalpy hstart=1E5 "Start value of enthalpy"
     annotation (Dialog(tab="Initialization"));
-
+parameter Modelica.SIunits.Length ll_start "Start value of length"
+                                                                  annotation (Dialog(tab="Initialization"));
 /****************** ControlVolume Options  ***********************/
 import Components.Units.HeatExchangers.MovingBoundary.Enumerations.OnePhase;
 parameter OnePhase PhaseSelection=OnePhase.SC;
 
+output Modelica.SIunits.Length ll_output;
 /***************  VARIABLES ******************/
-  Modelica.SIunits.Length ll;
+  Modelica.SIunits.Length ll(start= ll_start);
   Medium.ThermodynamicState  fluidState;
   Medium.SaturationProperties sat;
   Medium.AbsolutePressure pp(start=pstart);
@@ -75,6 +77,36 @@ parameter OnePhase PhaseSelection=OnePhase.SC;
     annotation (Placement(transformation(extent={{-20,40},{20,60}})));
 
 equation
+  ll_output = ll;
+ if (h_a>h_l) then
+ //ll = 0;
+ rho_b = rho_a; /* Fictisus value not use in the equation */
+ rho_a = Medium.density_ph(pp,h_a);
+ Dz_a = 0;
+ Dz_b = der(ll);
+ Dh_dt_a = der(InFlow.h_outflow);
+ Dh_dt_b = Dh_dt_a;
+ h_b = h_a;
+ else
+if (PhaseSelection == OnePhase.SC) then
+rho_b = rho_l;
+rho_a = Medium.density_ph(pp,h_a);  /* Fictisus value not use in the equation */
+Dz_a = 0;
+Dz_b = der(ll);
+Dh_dt_a = der(InFlow.h_outflow);
+Dh_dt_b = dhdp_l*der(pp);
+h_b = h_l;
+else
+ rho_b = Medium.density_ph(pp,h_b);  /* Fictisus value not use in the equation */
+ rho_a = rho_v;
+ Dz_a = 0;
+ Dz_b = der(ll);
+ Dh_dt_a = dhdp_v*der(pp);
+ Dh_dt_b = der(OutFlow.h_outflow);
+ h_a = h_v;
+end if;
+end if;
+
   /* Fluid Properties */
   sat = Medium.setSat_p(pp);
   h_v = Medium.dewEnthalpy(sat);
@@ -108,23 +140,6 @@ Dh_dt = 1/2*(Dh_dt_a + Dh_dt_b);
 
 q_dot = thermalPortL.phi*(2*pi*rr*ll);
 TT = thermalPortL.T;
-if (PhaseSelection == OnePhase.SC) then
-rho_b = rho_v; /* Fictisus value not use in the equation */
-rho_a = rho_l;
-Dz_a = 0;
-Dz_b = der(ll);
-Dh_dt_a = der(InFlow.h_outflow);
-Dh_dt_b = dhdp_l*der(pp);
-h_b = h_v;
-else
-rho_b = rho_l;  /* Fictisus value not use in the equation */
-rho_a = rho_v;
-Dz_a = der(ll);
-Dz_b = 0;
-Dh_dt_a = dhdp_v*der(pp);
-Dh_dt_b = der(OutFlow.h_outflow);
-h_a = h_v;
-end if;
 
 //* BOUNDARY CONDITIONS *//
  /* Enthalpies */

@@ -12,6 +12,7 @@ Flow1DimCut
 Flow1DimCut_HX
 Obsolete
 MB_SBTP
+Functions
 MB_SBTPport
 MBeva
 MBeva_port
@@ -29,6 +30,8 @@ Test_MBeva
 Test_MBevaCompare
 MovingBoundary_NTU
 Cell_OnePhaseInput
+Cell_TwoPhase
+Cell_TwoPhase_AD
 MBeva_Complete_NTU_2
 Cell_OnePhase
 Cell_TwoPhase
@@ -37,8 +40,13 @@ MBCell_Base_New
 MBCell_SC
 Functions
 Cell_TwoPhase_AD
+Cell_OnePhase_Base
+Cell_TwoPhase_Base
 Cell_OnePhase_Full
 Cell_OnePhase_Base
 Cell_OnePhase_SC_NoExtend
 Cell_SuperHeated
 Cell_SubCooled
+Cell_OnePhase_SC
+Cell_OnePhase_Base_SC
+Cell_OnePhase_Base_SH

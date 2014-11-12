@@ -28,8 +28,10 @@ parameter Modelica.SIunits.Pressure pstart "Fluid pressure start value"
                                      annotation (Dialog(tab="Initialization"));
   parameter Medium.SpecificEnthalpy hstart=1E5 "Start value of enthalpy"
     annotation (Dialog(tab="Initialization"));
-
+///  parameter Modelica.SIunits.Length lstart=1 "Start value of Length"
+   // annotation (Dialog(tab="Initialization"));(start = lstart)
 /***************  VARIABLES ******************/
+output Modelica.SIunits.Length ll_output;
   Modelica.SIunits.Length ll;
   Medium.SaturationProperties sat;
   Medium.AbsolutePressure pp(start=pstart);
@@ -74,6 +76,25 @@ parameter Modelica.SIunits.Pressure pstart "Fluid pressure start value"
     annotation (Placement(transformation(extent={{-20,40},{20,60}})));
 
 equation
+  ll = ll_output;
+//   if (h_a>h_v) then
+//     rho_a = Medium.density_ph(pp,h_a);
+// rho_b = rho_a;
+// Dz_a = -der(ll)/2;
+// Dz_b = +der(ll)/2;
+// dhdt_a = +der(InFlow.h_outflow);
+// dhdt_b = +dhdt_a;
+//   else
+rho_a = Medium.density_ph(pp,h_a);
+rho_b = rho_v;
+Dz_a = 0;
+Dz_b = der(ll);
+//h_a = h_l;
+h_b = h_v;
+dhdt_b = dhdp_v*der(pp);
+dhdt_a = +der(InFlow.h_outflow);
+// end if;
+
   /* Fluid Properties */
   sat = Medium.setSat_p(pp);
   TT = Medium.saturationTemperature_sat(sat);
@@ -113,11 +134,11 @@ VV = (rho_l^2*(h_a - h_b) +rho_l*rho_v*(h_b - h_a + (h_l -h_v)*log(GG)))/((h_a -
 dVVdt = dVVdp*der(pp) +dVVdha*dhdt_a + dVVdhb*dhdt_b;
 
 /* Void fraction derivative wrt p */
-dVVdp = drdp_l/(Dh_ab*Dr_lv^2)*(Dh_ab*rho_l + rho_v*Dh_ab_lv) -
- 2*rho_l*(drdp_l -drdp_v)/(Dh_ab*Dr_lv^3)*(Dh_ab*rho_l + Dh_ab_lv*rho_v) +
-rho_l/(Dh_ab*Dh_lv^2)*( Dh_ab*drdp_l +drdp_v*Dh_ab_lv +
-rho_v*((dhdp_l -dhdp_v)*log(GG) +Dh_lv/Gamma_a*(Theta_a - GG*Theta_b)));
-
+// dVVdp = drdp_l/(Dh_ab*Dr_lv^2)*(Dh_ab*rho_l + rho_v*Dh_ab_lv) -
+//  2*rho_l*(drdp_l -drdp_v)/(Dh_ab*Dr_lv^3)*(Dh_ab*rho_l + Dh_ab_lv*rho_v) +
+// rho_l/(Dh_ab*Dh_lv^2)*( Dh_ab*drdp_l +drdp_v*Dh_ab_lv +
+// rho_v*((dhdp_l -dhdp_v)*log(GG) +Dh_lv/Gamma_a*(Theta_a - GG*Theta_b)));
+dVVdp =0;
 /* Void fraction derivative wrt h_a */
 dVVdha = - rho_l/(Dh_ab^2*Dr_lv^2)*(Dh_ab*rho_l +rho_v*Dh_ab_lv) +
 rho_l/(Dh_ab*Dr_lv^2)*(rho_l + rho_v*(-1 + Dh_lv*Dr_lv/Gamma_a));
@@ -129,20 +150,11 @@ rho_l/(Dh_ab*Dr_lv^2)*(-rho_l +rho_v*(1 - Dh_lv*Dr_lv/Gamma_b));
 q_dot = thermalPortL.phi*(2*pi*rr*ll);
 TT = thermalPortL.T;
 
-rho_a = Medium.density_ph(pp,h_a);
-rho_b = Medium.density_ph(pp,h_b);
-Dz_a = -der(ll)/2;
-Dz_b = +der(ll)/2;
-//h_a = h_l;
-//h_b = h_v;
-dhdt_b = +der(h_b);
-dhdt_a = +der(h_a);
-
 //* BOUNDARY CONDITIONS *//
 /* Enthalpies */
 h_a = inStream(InFlow.h_outflow);
 InFlow.h_outflow = h_a;
-h_b = inStream(OutFlow.h_outflow);
+//h_b = inStream(OutFlow.h_outflow);
 OutFlow.h_outflow = h_b;
 
 /* pressures */
