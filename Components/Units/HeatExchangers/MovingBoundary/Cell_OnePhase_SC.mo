@@ -1,5 +1,5 @@
 within Components.Units.HeatExchangers.MovingBoundary;
-model Cell_OnePhase_Base "1-D lumped fluid flow model (Real fluid model)"
+model Cell_OnePhase_SC "1-D lumped fluid flow model (Real fluid model)"
 replaceable package Medium = ThermoCycle.Media.DummyFluid constrainedby
     Modelica.Media.Interfaces.PartialMedium
 annotation (choicesAllMatching = true);
@@ -83,10 +83,8 @@ annotation (choicesAllMatching = true);
   Real dhdt_b "Outlet state - h deriv wrt time";
 
   /* Additional variables for display purposes */
-  Modelica.SIunits.Volume VV = AA*ll "Control volume";
-  Modelica.SIunits.Mass MM = rho*VV "Mass in control volume";
-
-   Real tFactor;
+  Modelica.SIunits.Volume volume = AA*ll "Control volume";
+  Modelica.SIunits.Mass mass = rho*volume "Mass in control volume";
 
  Real AU;
  Real C_dot;
@@ -97,61 +95,10 @@ annotation (choicesAllMatching = true);
     annotation (Placement(transformation(extent={{-20,40},{20,60}})));
 
 equation
-//   if (ll<=1e-3) then
-//     rho_b = rho_a;
-//     rho_a = Medium.density_ph(pp,h_a);
-//     dzdt_a = 0;
-//     dldt = 0;
-//     dhdt_a = der(inFlow.h_outflow);
-//     dhdt_b = dhdt_a;
-//     h_b = h_a;
-//     /* Mass balance */
-//     //ll = Modelica.Constants.small;
-//     dMdt = M_dot_a - M_dot_b;
-//     //dMdt = 0;
-//     //ll*drdt + rho*dldt + rho_a*dzdt_a - rho_b*dzdt_b = dMdt/AA;
-//     /* Energy balance */
-//     //dUdt = 0;
-//     dUdt = H_dot_a - H_dot_b + q_dot "No work is done";
-//    dUdt = 0;
-//     //rho*hh*dldt + rho*ll*dhdt + drdt*hh*ll - ll*dpdt + h_a*rho_a*dzdt_a - h_b*rho_b*dzdt_b = dUdt/AA;
-//     active = false;
-//   else
-//     rho_b = rho_l; /* Fictisus value not use in the equation */
-//     rho_a = Medium.density_ph(pp,h_a);
-//     dldt = der(ll);
-//     dzdt_a = 0;
-//     dhdt_a = der(inFlow.h_outflow);
-//     dhdt_b = dhdp_l*dpdt;
-//     h_b = h_l;
-//     /* Mass balance */
-//     dMdt = M_dot_a - M_dot_b;
-//     ll*drdt + rho*dldt + rho_a*dzdt_a - rho_b*dzdt_b = dMdt/AA;
-//     /* Energy balance */
-//     dUdt = H_dot_a - H_dot_b + q_dot "No work is done";
-//     rho*hh*dldt + rho*ll*dhdt + drdt*hh*ll - ll*dpdt + h_a*rho_a*dzdt_a - h_b*rho_b*dzdt_b = dUdt/AA;
-//     active = true;
-//   end if;
+  rho_a = Medium.density_ph(pp,h_a);
+  dzdt_a = 0;
+  dhdt_a = der(inFlow.h_outflow);
 
-    rho_a = Medium.density_ph(pp,h_a);
-    dzdt_a = 0;
-    dhdt_a = der(inFlow.h_outflow);
-    /* Mass balance */
-    dMdt = M_dot_a - M_dot_b;
-    /* Energy balance */
-    dUdt = H_dot_a - H_dot_b + q_dot "No work is done";
-
-  //tFactor = 1 - ThermoCycle.Functions.transition_factor(start=h_l-10,stop=h_l-1,position=h_a);
-  tFactor = 0;
-
-//   dMdt   = tFactor*0      + (1 - tFactor)*(ll*drdt + rho*dldt + rho_a*dzdt_a - rho_b*dzdt_b) * AA;
-//   dUdt   = tFactor*0      + (1 - tFactor)*(rho*hh*dldt + rho*ll*dhdt + drdt*hh*ll - ll*dpdt + h_a*rho_a*dzdt_a - h_b*rho_b*dzdt_b) * AA;
-//   h_b    = tFactor*h_a    + (1 - tFactor)*h_l;
-//   dhdt_b = tFactor*dhdt_a + (1 - tFactor)*dhdp_l*dpdt;
-//   rho_b  = tFactor*rho_a  + (1 - tFactor)*rho_l;
-
-  dMdt   = (ll*drdt + rho*dldt + rho_a*dzdt_a - rho_b*dzdt_b) * AA;
-  dUdt   = (rho*hh*dldt + rho*ll*dhdt + drdt*hh*ll - ll*dpdt + h_a*rho_a*dzdt_a - h_b*rho_b*dzdt_b) * AA;
   h_b    = h_l;
   dhdt_b = dhdp_l*dpdt;
   rho_b  = rho_l;
@@ -179,6 +126,13 @@ equation
   rho_l = Medium.bubbleDensity(satState);
   dhdp_l = Medium.dBubbleEnthalpy_dPressure(satState);
   dhdp_v = Medium.dDewEnthalpy_dPressure(satState);
+
+  /* Mass balance */
+  dMdt = M_dot_a - M_dot_b;
+  dMdt   = (ll*drdt + rho*dldt + rho_a*dzdt_a - rho_b*dzdt_b) * AA;
+  /* Energy balance */
+  dUdt = H_dot_a - H_dot_b + q_dot "No work is done";
+  dUdt   = (rho*hh*dldt + rho*ll*dhdt + drdt*hh*ll - ll*dpdt + h_a*rho_a*dzdt_a - h_b*rho_b*dzdt_b) * AA;
 
   /* Heat transfer */
   AU = 2*pi*rr*ll*Unom;
@@ -259,4 +213,4 @@ equation
  </ul>
  <p><big> 
         </HTML>"));
-end Cell_OnePhase_Base;
+end Cell_OnePhase_SC;

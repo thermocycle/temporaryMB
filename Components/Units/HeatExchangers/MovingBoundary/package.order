@@ -39,3 +39,4 @@ Functions
 Cell_TwoPhase_AD
 Cell_OnePhase_Base
 Cell_OnePhase_Full
+Cell_OnePhase_SC
