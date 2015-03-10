@@ -1,0 +1,134 @@
+\appendix{
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Two phase flow behaviour}
+The two phase flow regime is characterized by the flow patterns that the fluid assumes during evaporation or condensation. The flow configuration depends on the thermodynamic properties of the fluid, the mass flow, the thermal energy flux and the channel geometry. A zone characterized by a certain flow pattern is called flow region.
+Visual inspections is the easier approach to detect the flow patterns. Different probes have been developed during the years to accomplish this point. Based on the channel geometry we can distinguish among flow pattern in horizontal and in vertical pipes.
+The type of flow configurations are several ecc ecc.
+Since the gas and the liquid in a two-phase flow are characterized by different velocity, they can be treated as two distinct continua with an interface where the velocity is the same.
+The gas fraction of a two-phase flow can be measured at a local point of the channel by inserting a pipe perpendicular to the channel or by an electrical probe. This would allow to get instantaneous local gas fraction. Averaging over time we can get a local time averaged gas fraction. 
+On the other hand an instantaneous volume fraction can be defined as the gas fraction of the total volume considered. Enclosing a pipe section of length Delta z, we can measure the volume fraction. Then letting Delta z goes to zero we get the area averaged gas fraction which is the most adopted definition of void fraction and is then defined as:
+
+\begin{equation}
+\overline{\gamma} = \frac{A^{''}}{A}
+\end{equation}
+
+\subsection{Average Void Fraction Estimation}\label{subsubsec:avgVoidFrac}
+
+\gls{alphabar}The state variables are pressure and enthalpy and all other properties are functions of those two. The regularly used quantities at the phase boundaries at constant pressure are denoted with $^\prime$ for the liquid phase and $^{\prime\prime}$ for the vapour phase. Hence, the void fraction $\gamma$ can be expressed as a function of vapour fraction $x$ by using the enthalpy-based formulations
+\begin{align}
+x(p,h)      &= \frac{h-\hp}{\hpp-\hp} \text{ and } \label{eqn:vapourFraction} \\
+\gamma(p,h) &= \frac{x \rhop}{ x \rhop + \left( 1 - x \right) \rhopp }\text{. } \label{eqn:voidFraction}
+\end{align}
+Integrating Eq.~\ref{eqn:voidFraction} over an enthalpy range $\Delta h = h_b - h_a$ allows us to calculate the average void fraction $\overline{\gamma}$ as a function of pressure and the two enthalpies as shown by Bonilla et al.~\cite{Bonilla2015} resulting in 
+\begin{gather}
+\overline{\gamma}(p,h_a,h_b) = \int_{h_a}^{h_b}\!\!\!\!\!\!\!\!  \gamma(p,h)dh \, \left(h_b - h_a \right)^{-1} \\
+= \frac{\rhop{}^2 \left(h_a-h_b\right) + \rhop\rhopp \left(h_b-h_a+\left(\hp-\hpp\right) \ln \left(\frac{\Gamma\left(h_a\right)}{\Gamma\left(h_b\right)}\right)\right)}
+{\left(h_a-h_b\right) \left( \rhop-\rhopp \right)^2 } \label{eqn:gammaBar} \\
+\text{ with } \Gamma(h) = \rhop (h-\hp) + \rhopp (\hpp-h) \text{. } \label{eqn:Gamma} 
+\end{gather}
+This $\Gamma(h)$ can be regarded as a density-based fraction of the enthalpy of evaporation 
+\begin{equation}
+\Gamma(x) = \left( x \rhop + (1-x) \rhopp \right) \left( \hpp-\hp \right) \text{. }
+\end{equation}
+The $\overline{\gamma}$ obtained from Eq.~\ref{eqn:gammaBar} allows us to calculate the average density $\overline{\rho}$ from 
+\begin{equation}
+\overline{\rho} = (1-\overline{\gamma}) \rhop + \overline{\gamma} \rhopp \text{. }
+\end{equation}
+A computationally efficient dynamic model for the two-phase region requires an analytic derivative for the average void fraction. Please see Eq.~\ref{eqn:dgammabardt} through Eq.~\ref{eqn:dgammabardhb} for an expression of $d\overline{\gamma}/dt$ that is explicit in $p$, $h_a$ and $h_b$. 
+
+\paragraph{Average void fraction partial derivatives}
+
+\newcommand{\dhab}{\Delta h_{ab}}
+\newcommand{\dhtp}{\Delta h_{tp}}
+\newcommand{\drtp}{\Delta \rho_{tp}}
+\newcommand{\dhabtp}{\Delta h_{ab,tp}}
+
+\begin{align}
+\frac{d\overline{\gamma}}{dt}  =& + \frac{\partial \overline{\gamma}}{\partial p}\frac{dp}{dt} + \frac{\partial \overline{\gamma}}{\partial h_a}\frac{dh_a}{dt} + \frac{\partial \overline{\gamma}}{\partial h_b}\frac{dh_b}{dt} \label{eqn:dgammabardt} \\
+%
+\frac{\partial \overline{\gamma}}{\partial p}=&+{\frac{\frac{d\rhop}{dp}}{\dhab\drtp^2}\left\lbrace{\dhab\rhop+\rhopp\dhabtp}\right\rbrace}\nonumber\\
+&-{\frac{2\rhop\left(\frac{d\rhop}{dp}-\frac{d\rhopp}{dp}\right)}{\dhab\drtp^3}\left\lbrace{\dhab\rhop+\rhopp\dhabtp}\right\rbrace}\nonumber\\
+&+{\frac\rhop{\dhab\drtp^2}\left\lbrace{{\dhab{\frac{d\rhop}{dp}}}+\frac{d\rhopp}{dp}\dhabtp}\right.}\nonumber\\
+&\quad\left.{+\rhopp\left[{\left({\frac{d\hp}{dp}-\frac{d\hpp}{dp}}\right)\ln\left({G}\right)+\frac{\dhtp}{\Gamma(h_a)}\left({\Theta(h_a)-G\Theta(h_b)}\right)}\right]}\right\rbrace
+%
+\label{eqn:dgammabardp}\\
+%
+\frac{\partial \overline{\gamma}}{\partial h_a}=&
+-{\frac\rhop{\dhab^{2}\drtp^{2}}\left\lbrace{\dhab\rhop+\rhopp\dhabtp}\right\rbrace}\nonumber\\
+&+{\frac\rhop{\dhab\drtp^{2}}\left\lbrace+\rhop+\rhopp\left(-1+\frac{\dhtp\drtp}{\Gamma(h_a)}\right)\right\rbrace}\label{eqn:dgammabardha}\\
+%
+\frac{\partial \overline{\gamma}}{\partial h_b}=&
++{\frac\rhop{\dhab^{2}\drtp^{2}}\left\lbrace{\dhab\rhop+\rhopp\dhabtp}\right\rbrace}\nonumber\\
+&+{\frac\rhop{\dhab\drtp^{2}}\left\lbrace-\rhop+\rhopp\left(+1-\frac{\dhtp\drtp}{\Gamma(h_b)}\right)\right\rbrace}\label{eqn:dgammabardhb}\\
+%
+\text{ with } 
+\dhtp     =&\;\, \hp-\hpp, \quad \drtp = \rhop-\rhopp, \quad \dhab = h_a-h_b, \nonumber\\
+\Theta(h) =& \left(h-\hp\right)\frac{d\rhop}{dp}-\rhop\frac{d\hp}{dp}+\left(\hpp-h\right)\frac{d\rhopp}{dp}+\rhopp\frac{d\hpp}{dp}, \nonumber\\
+\dhabtp   =& -\dhab+\dhtp\ln\left(G\right), \text{ and } G = \Gamma(h_a) / \Gamma(h_b) \text{. } \nonumber
+\end{align}
+%\end{sidewaysfigure}
+
+
+
+%\begin{sidewaysfigure}
+%\textbf{THIS GOES INTO THE APPENDIX}
+%\begin{align}
+%\frac{d\overline{\gamma}}{dt}  =& + \frac{\partial \overline{\gamma}}{\partial p}\frac{dp}{dt} + \frac{\partial \overline{\gamma}}{\partial h_a}\frac{dh_a}{dt} + \frac{\partial \overline{\gamma}}{\partial h_b}\frac{dh_b}{dt} \label{eqn:dgammabardt} \\
+%%
+%\frac{\partial \overline{\gamma}}{\partial p} =& + {
+%  \frac{\frac{d\rhop}{dp}}{\left( h_a-h_b \right) \left( \rhop-\rhopp \right)^2} 
+%  \left\lbrace{ \left( h_a-h_b \right) \rhop + \rhopp \left[{ 
+%    h_b-h_a + \left( \hp-\hpp \right) \ln \left({ \frac{\Gamma(h_a)}{\Gamma(h_b)} }\right) 
+%  }\right] }\right\rbrace 
+%} \nonumber \\ 
+%& - {
+%  \frac{2 \rhop \left( \frac{d\rhop}{dp} - \frac{d\rhopp}{dp} \right)}{\left( h_a-h_b \right) \left( \rhop-\rhopp \right)^3} 
+%  \left\lbrace{ \left( h_a-h_b \right) \rhop + \rhopp \left[{ 
+%    h_b-h_a + \left( \hp-\hpp \right) \ln \left({ \frac{\Gamma(h_a)}{\Gamma(h_b)} }\right)
+%  }\right] }\right\rbrace 
+%} \nonumber \\
+%& + {
+%  \frac{\rhop}{\left( h_a-h_b \right) \left( \rhop-\rhopp \right)^2} \left\lbrace{
+%    { \left( h_a-h_b \right) {\frac{d\rhop}{dp} } } + \frac{d\rhopp}{dp} \left[{ 
+%      h_b-h_a + \left( \hp-\hpp \right) \ln \left( \frac{\Gamma(h_a)}{\Gamma(h_b)} \right) 
+%    }\right] 
+%}\right. } \nonumber \\
+%& \quad \left.{ + \rhopp \left[{
+%  \left({ \frac {d\hp}{dp} - \frac{d\hpp}{dp} }\right) \ln \left({ \frac{\Gamma(h_a)}{\Gamma(h_b)} }\right)
+%  + \frac{\left( \hp-\hpp \right) \left( \Gamma(h_b)  \right) }
+%      { \Gamma(h_a) }
+%}\right. }\right. \nonumber \\
+%& \quad \quad \left.{ \left.{ \cdot \left({
+%  \frac{ \left( h_a-\hp \right) \frac{d\rhop}{dp} - \rhop \frac{d\hp}{dp} 
+%    + \left( \hpp-h_a \right) \frac{d\rhopp}{dp} + \rhopp \frac{d\hpp}{dp}}
+%    {\Gamma(h_b)}
+%}\right.}\right.}\right. \nonumber \\ 
+%& \quad \quad \quad \left.{ \left.{ \left.{ -
+%\frac{ \left( {\rhop}  \left( {h_a}-{\hp} \right) + {\rhopp} \left( {\hpp} - {h_a} \right) \right) 
+%          \left( \left( {h_b}-{\hp} \right) {\frac {d{\rhop}}{{d}p}} - {\rhop}  {\frac{d{\hp}}{{d}p}} + 
+%               \left( {\hpp}  -{h_b} \right) {\frac {d{\rhopp}}{{d}p}} + {\rhopp}  {\frac {d{\hpp}}{{d}p}}
+%          \right) 
+%        }{ \left( {\rhop}   \left( {h_b}-{\hp}   \right) +{\rhopp}   \left( {\hpp}  -{h_b} \right) \right) ^{2}}
+%        } \right) 
+%} \right]  }\right\rbrace
+%%
+%%
+%\label{eqn:dgammabardp} \\
+%%
+%\frac{\partial \overline{\gamma}}{\partial h_a} =&
+%-{\frac{\rhop}{\left(h_a-h_b\right)^{2}\left(\rhop-\rhopp\right)^{2}}\left\lbrace{\left(h_a-h_b\right)\rhop+\rhopp\left[h_b-h_a+\left(\hp-\hpp\right)\ln \left({ \frac{\Gamma(h_a)}{\Gamma(h_b)} }\right)\right]}\right\rbrace} \nonumber \\ 
+%&+{\frac{\rhop}{\left(h_a-h_b\right)\left(\rhop-\rhopp\right)^{2}}\left\lbrace+\rhop+\rhopp\left(-1+{\frac{\left(\hp-\hpp\right)\left(\rhop-\rhopp\right)}{\rhop\left(h_a-\hp\right)+\rhopp\left(\hpp-h_a\right)}}\right)\right\rbrace} \label{eqn:dgammabardha} \\
+%%
+%\frac{\partial \overline{\gamma}}{\partial h_b} =&
+%+{\frac{\rhop}{\left(h_a-h_b\right)^{2}\left(\rhop-\rhopp\right)^{2}}\left\lbrace{\left(h_a-h_b\right)\rhop+\rhopp\left[h_b-h_a+\left(\hp-\hpp\right)\ln \left({ \frac{\Gamma(h_a)}{\Gamma(h_b)} }\right)\right]}\right\rbrace} \nonumber \\
+%&+{\frac{\rhop}{\left(h_a-h_b\right)\left(\rhop-\rhopp\right)^{2}}\left\lbrace-\rhop+\rhopp\left(+1-{\frac{\left(\hp-\hpp\right)\left(\rhop-\rhopp\right)}{\rhop\left(h_b-\hp\right)+\rhopp\left(\hpp-h_b\right)}}\right)\right\rbrace}\label{eqn:dgammabardhb}
+%%
+%\end{align}
+%\end{sidewaysfigure}
+
+%\begin{equation}
+%AL_{\gls{sub:1}} \cdot \left[   \gls{rhobar}_{\gls{sub:1}} \cdot \frac{d \gls{hbar}_{  \gls{sub:1}}}{d \gls{t}} 
+%  + \gls{hbar}_{\gls{sub:1}}   \cdot \frac{d \gls{rhobar}_{\gls{sub:1}}}{d \gls{t}}
+%  -                                  \frac{d \gls{p}}{d \gls{t}} \right] + A( \overline{\rho}_{\gls{sub:1}} \overline{h}_{\gls{sub:1}} - \rho_{\gls{sub:l}} h_{\gls{sub:l}}   )  \frac{d  L_{\gls{sub:1}}}{dt} = \gls{mdot}_{\gls{sub:a}} \cdot \gls{h}_{\gls{sub:a}} -  \gls{mdot}_{\gls{sub:b}} \cdot \gls{h}_{\gls{sub:b}} + \gls{Qdot}
+%\end{equation}
+%\begin{sidewaysfigure}

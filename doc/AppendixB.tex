@@ -1,0 +1,264 @@
+\section{Explicit moving boundary formulation for a general evaporator model}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%% SUB COOLED ZONE           - ZONE 1              %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+{\bf SUB-COOLED ZONE}
+\end{center}
+{\bf Primary fluid} 
+\begin{center}
+\textit{Conservation equations}\\
+\end{center}
+
+
+\begin{flushleft}
+Mass balance\\
+\end{flushleft}
+\begin{equation}
+\gls{A} \left[\gls{L}_{\gls{sub:1}}  \cdot \frac{d \gls{rhobar}_{\gls{sub:1}}}{d \gls{t}} + (\gls{rhobar}_{\gls{sub:1}} - \rho_{\gls{sub:l}}) \cdot \frac{d \gls{L}_{\gls{sub:1}}}{d \gls{t}}\right] = \gls{mdot}_{\gls{sub:in}} -  \gls{mdot}_{\gls{sub:12}}
+\end{equation}
+
+\begin{flushleft}
+Energy balance\\
+\end{flushleft}
+\begin{equation}
+\gls{A}\gls{L}_{\gls{sub:1}}\left[
+    \gls{rhobar}_{\gls{sub:1}} \cdot \frac{d \gls{hbar}_{  \gls{sub:1}}}{d \gls{t}} 
+  + \gls{hbar}_{\gls{sub:1}}   \cdot \frac{d \gls{rhobar}_{\gls{sub:1}}}{d \gls{t}}
+  -                                  \frac{d \gls{p}_{     \gls{sub:1}}}{d \gls{t}}
+\right] + \gls{A}\left(\gls{rhobar}_{\gls{sub:1}}\gls{hbar}_{\gls{sub:1}} - \rho_{\gls{sub:l}}h_{\gls{sub:l}}\right)\frac{d \gls{L}_{\gls{sub:1}}}{d \gls{t}} = \gls{mdot}_{\gls{sub:in}}  \dot{h}_{\gls{sub:in}} -  \gls{mdot}_\text{A} \dot{h}_\text{A} + \gls{Qdot}_\text{r1}
+\end{equation}
+
+\begin{equation}
+\frac{d \gls{rhobar}_{\gls{sub:1}}}{d \gls{t}} = \left[ \frac{\partial \gls{rhobar}_{\gls{sub:1}}}{\partial p_{\gls{sub:1}}} + \frac{1}{2} \cdot \frac{\partial \gls{rhobar}_{\gls{sub:1}}}{\partial \gls{hbar}_{\gls{sub:1}}} \cdot \frac{\partial \gls{h}_{\gls{sub:l}}}{\partial \gls{p}_{\gls{sub:1}}}\right] \frac{d \gls{p}_{\gls{sub:1}}}{d \gls{t}} + \frac{1}{2} \cdot \frac{\partial \gls{rhobar}_{\gls{sub:1}}}{\partial \gls{hbar}_{\gls{sub:1}}}  \cdot \frac{d \gls{h}_{\gls{sub:in}}}{d \gls{t}}
+\end{equation}
+
+
+\begin{equation}
+\frac{d \gls{hbar}_{\gls{sub:1}}}{d \gls{t}} = \frac{1}{2} \cdot \left[\frac{\partial \gls{hbar}_{\gls{sub:l}}}{\partial p_{\gls{sub:1}}} \cdot \frac{d \gls{p}_{\gls{sub:1}}}{d \gls{t}} + \frac{d \gls{h}_{\gls{sub:in}}}{d \gls{t}}\right]
+\end{equation}
+\\
+\begin{center}
+\textit{Constitutive equations}\\
+\end{center}
+
+\begin{equation}
+\gls{hbar}_{\gls{sub:1}} =  \frac{1}{2}(h_{\gls{sub:in}} + {h}_{\gls{sub:l}})
+\end{equation}
+\begin{equation}
+subcool = setState\_ph(p_{\gls{sub:1}},\gls{hbar}_{\gls{sub:1}})
+\end{equation}
+
+\begin{equation}
+sat = setSat\_p(p_{\gls{sub:2}})
+\end{equation}
+\begin{equation}
+\rho_{\gls{sub:l}} = bubbleDensity(sat)
+\end{equation}
+\begin{equation}
+h_{\gls{sub:l}} = bubbleEnthalpy(sat)
+\end{equation}
+\begin{equation}
+\frac{\partial \gls{hbar}_{\gls{sub:l}}}{\partial p_{\gls{sub:1}}}= dBubbleEnthalpy\_dPressure(sat)
+\end{equation}
+\begin{equation}
+\frac{\partial \gls{rhobar}_{\gls{sub:1}}}{\partial \gls{hbar}_{\gls{sub:1}}}= density\_derh\_p(subcool)
+\end{equation}
+\begin{equation}
+\frac{\partial \gls{rhobar}_{\gls{sub:1}}}{\partial p_{\gls{sub:1}}}= density\_derp\_h(subcool)
+\end{equation}
+\begin{equation}
+\bar{T}_{\gls{sub:1}} = temperature(subcool)
+\end{equation}
+\begin{equation}
+\gls{Qdot}_\text{r,1} = \pi \text{D} \gls{L}_{\gls{sub:1}} U_\text{pf,1} (T_\text{w,1} - \bar{T}_{\gls{sub:1}})
+\end{equation}
+
+%%%%%%%%%%%%% METAL WALL ZONE 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+{\bf Metal wall}\\
+\begin{center}
+\textit{Conservation equations}\\
+\end{center}
+
+Energy balance:\\
+
+\begin{equation}
+C_\text{w}(M_\text{tot} \cdot \frac{\gls{L}_{\gls{sub:1}}}{\gls{L}}) \cdot  \frac{d \text{T}_\text{w,1}}{d t} + \frac{M_\text{tot}}{\gls{L}} (\text{T}_\text{w,1} - \text{T}_\text{w,12})  \frac{d \gls{L}_{\gls{sub:1}}}{d t} = \gls{Qdot}_\text{sf,1} - \gls{Qdot}_\text{r,1}
+\end{equation}\\
+
+\begin{center}
+\textit{Constitutive equation}\\
+\end{center}
+\begin{equation}
+\text{T}_\text{w,12} = \frac{   \text{T}_\text{w,1} \gls{L}_{\gls{sub:2}}  + \text{T}_\text{w,2}\gls{L}_{\gls{sub:1}}      }{  \gls{L}_{\gls{sub:1}} + \gls{L}_{\gls{sub:2}}         } 
+\end{equation}
+
+\begin{equation}
+C_\text{w} = const.
+\end{equation}
+
+\begin{equation}
+M_\text{tot} = const.
+\end{equation}
+
+\begin{equation}
+L= const.
+\end{equation}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%% TWO-PHASE ZONE    -      ZONE 2                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%  ZONE 2 PRIMARY FLUID %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+{\bf TWO-PHASE ZONE}
+\end{center}
+{\bf Primary fluid}\\
+\begin{center}
+\textit{Conservation equations}\\
+\end{center}
+Mass balance:\\
+\begin{equation}
+\gls{A}\left[\gls{L}_{\gls{sub:2}}  \cdot \frac{d \gls{rhobar}_{\gls{sub:2}}}{d t} + (\gls{rhobar}_{\gls{sub:2}} - \rho_{\gls{sub:v}}) \cdot \frac{d \gls{L}_{\gls{sub:2}}}{d t} + (\rho_{\gls{sub:l}} - \rho_{\gls{sub:v}}) \cdot \frac{d \gls{L}_{\gls{sub:1}}}{d t}\right] =  \gls{mdot}_\text{A} -  \gls{mdot}_{\gls{sub:23}}
+\end{equation}
+
+\begin{flushleft}
+Energy balance:\\
+\end{flushleft}
+\begin{equation}
+\gls{A}\left[\gls{L}_{\gls{sub:2}} \cdot  \frac{d \gls{rhobar}_{\gls{sub:2}} \gls{hbar}_{\gls{sub:2}}}{d t} +  (\gls{rhobar}_{\gls{sub:2}}\gls{hbar}_{\gls{sub:2}} - \rho_{\gls{sub:v}}h_{\gls{sub:v}}) \cdot \frac{d \gls{L}_{\gls{sub:2}}}{d t}  +  (\rho_{\gls{sub:l}}h_{\gls{sub:l}} - \rho_{\gls{sub:v}}h_{\gls{sub:v}}) \cdot \frac{d \gls{L}_{\gls{sub:1}}}{d t}       -   \gls{L}_{\gls{sub:2}} \cdot  \frac{d p_{\gls{sub:2}}}{d t} \right] =  \gls{mdot}_\text{A}  \dot{h}_\text{A} -  \gls{mdot}_{\gls{sub:23}} \dot{h}_{\gls{sub:23}} + \gls{Qdot}_\text{r,2}
+\end{equation}
+
+
+
+\begin{equation}
+\frac{d \gls{rhobar}_{\gls{sub:2}}}{d t} = ( \frac{\partial \rho_{\gls{sub:v}}}{\partial p_{\gls{sub:2}}} \cdot \bar{\alpha} +  \frac{\partial \rho_{\gls{sub:l}}}{\partial p_{\gls{sub:2}}} \cdot  (1 - \bar{\alpha})) \cdot  \frac{d p_{\gls{sub:2}}}{d t} + (\rho_{\gls{sub:v}} - \rho_{\gls{sub:l}}) \cdot [\frac{\partial \bar{\alpha}}{\partial p_{\gls{sub:2}}} \cdot  \frac{d p_{\gls{sub:2}}}{d t} + \frac{\partial \bar{\alpha}}{\partial h_\text{OUT,alpha}} \cdot \frac{d h_\text{OUT,alpha}}{d t} ]
+\end{equation}
+
+
+\begin{equation} \begin{split}
+ \frac{d \gls{rhobar}_{\gls{sub:2}} \gls{hbar}_{\gls{sub:2}}}{d t} &=  [\bar{\alpha} \cdot ( \frac{\partial \rho_{\gls{sub:v}}}{\partial p_{\gls{sub:2}}} \cdot h_{\gls{sub:v}} + \frac{\partial h_{\gls{sub:v}}}{\partial p_{\gls{sub:2}}} \cdot \rho_{\gls{sub:v}} )  + ( 1- \bar{\alpha}) \cdot (  \frac{\partial \rho_{\gls{sub:l}}}{\partial p_{\gls{sub:2}}} \cdot h_{\gls{sub:l}} + \frac{\partial h_{\gls{sub:l}}}{\partial p_{\gls{sub:2}}} \cdot \rho_{\gls{sub:l}} )] \cdot \frac{d p_{\gls{sub:2}}}{d t} \\+
+ &(\rho_{\gls{sub:v}}h_{\gls{sub:v}} - \rho_{\gls{sub:l}}h_{\gls{sub:l}}) \cdot  [\frac{\partial \bar{\alpha}}{\partial p_{\gls{sub:2}}} \cdot  \frac{d p_{\gls{sub:2}}}{d t} + \frac{\partial \bar{\alpha}}{\partial h_\text{OUT,alpha}} \cdot \frac{d h_\text{OUT,alpha}}{d t} ]
+\end{split}
+\end{equation}\\
+
+\begin{center}
+\textit{Constitutive equations}
+\end{center}
+\begin{equation}
+\gls{rhobar}_{\gls{sub:2}} = \rho_{\gls{sub:v}} \bar{\alpha} + \rho_{\gls{sub:l}} \cdot (1 - \bar{\alpha})
+\end{equation}
+
+\begin{equation}
+\gls{rhobar}_{\gls{sub:2}} \gls{hbar}_{\gls{sub:2}}= \rho_{\gls{sub:v}} h_{\gls{sub:v}} \bar{\alpha} + \rho_{\gls{sub:l}} h_{\gls{sub:l}} \cdot (1 - \bar{\alpha})
+\end{equation}
+
+\begin{equation}
+\rho_{\gls{sub:v}} = dewDensity(sat)
+\end{equation}
+\begin{equation}
+h_{\gls{sub:v}} = dewEnthalpy(sat)
+\end{equation}
+\begin{equation}
+\frac{\partial \gls{hbar}_{\gls{sub:v}}}{\partial p_{\gls{sub:2}}}= dDewEnthalpy\_dPressure(sat)
+\end{equation}
+
+\begin{equation}
+\bar{T}_{\gls{sub:2}} = temperature(sat)
+\end{equation}
+\begin{equation}
+\gls{Qdot}_\text{r,2} = \pi \text{D} \gls{L}_{\gls{sub:2}} U_\text{pf,2} (T_\text{w,2} - \bar{T}_{\gls{sub:2}})
+\end{equation}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ZONE 2  METAL WALL %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{flushleft}
+{\bf Metal Wall}\\
+\end{flushleft}
+\begin{center}
+\textit{Conservation equation}
+\end{center}
+Energy balance:\\
+\begin{equation}
+C_\text{w} \cdot \frac{M_\text{tot}}{\gls{L}} \cdot [\gls{L}_{\gls{sub:2}} \cdot  \frac{d \text{T}_\text{w,2}}{d t} +  (\text{T}_\text{w,12} - \text{T}_\text{w,23})  \frac{d \gls{L}_{\gls{sub:1}}}{d t} +  (\bar{\text{T}}_\text{w,2} - \text{T}_\text{w,23})  \frac{d \gls{L}_{\gls{sub:2}}}{d t}] = \gls{Qdot}_\text{sf,2} - \gls{Qdot}_\text{r,2}
+\end{equation}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%% SUPER-HEATED ZONE    -      ZONE 3              %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+{\bf SUPER-HEATED ZONE}
+\end{center}
+
+
+{\bf Primary fluid}\\
+\begin{center}
+\textit{Conservation equations}\\
+\end{center}
+Mass balance:
+\begin{equation}
+\text{A} [\gls{L}_{\gls{sub:3}}  \cdot \frac{d \gls{rhobar}_{\gls{sub:3}}}{d t} + (\rho_{\gls{sub:v}} - \gls{rhobar}_{\gls{sub:3}}) \cdot (\frac{d \gls{L}_{\gls{sub:1}}}{d t} + \frac{d \gls{L}_{\gls{sub:2}}}{d t})] = \gls{mdot}_{\gls{sub:23}} -  \gls{mdot}_{\gls{sub:out}}
+\end{equation}
+\begin{flushleft}
+Energy balance:
+\end{flushleft}
+\begin{equation}
+\text{A}\gls{L}_{\gls{sub:3}}[\gls{rhobar}_{\gls{sub:3}} \cdot \frac{d \gls{hbar}_{\gls{sub:3}}}{d t} + \gls{hbar}_{\gls{sub:3}} \cdot \frac{d \gls{rhobar}_{\gls{sub:3}}}{d t}  -  \frac{d p_{\gls{sub:3}}}{d t}] + \text{A}(\rho_{\gls{sub:v}}h_{\gls{sub:v}} - \gls{rhobar}_{\gls{sub:3}}\gls{hbar}_{\gls{sub:3}})\cdot (\frac{d \gls{L}_{\gls{sub:1}}}{d t} + \frac{d \gls{L}_{\gls{sub:2}}}{d t} ) = \gls{mdot}_{\gls{sub:23}}  \dot{h}_{\gls{sub:v}} -  \gls{mdot}_{\gls{sub:out}} \dot{h}_{\gls{sub:out}} + \gls{Qdot}_\text{r,3}
+\end{equation}
+
+
+\begin{equation}
+\frac{d \gls{rhobar}_{\gls{sub:3}}}{d t} = [ \frac{\partial \gls{rhobar}_{\gls{sub:3}}}{\partial p_{\gls{sub:3}}} + \frac{1}{2} \cdot \frac{\partial \gls{rhobar}_{\gls{sub:3}}}{\partial \gls{hbar}_{\gls{sub:3}}} \cdot \frac{\partial \gls{hbar}_{\gls{sub:v}}}{\partial p_{\gls{sub:3}}}] \frac{d p_{\gls{sub:3}}}{d t} + \frac{1}{2} \cdot \frac{\partial \gls{rhobar}_{\gls{sub:3}}}{\partial \gls{hbar}_{\gls{sub:3}}}  \cdot \frac{d h_{\gls{sub:out}}}{d t}
+\end{equation}
+
+
+\begin{equation}
+\frac{d \gls{hbar}_{\gls{sub:3}}}{d t} = \frac{1}{2} \cdot [\frac{\partial \gls{hbar}_{\gls{sub:v}}}{\partial p_{\gls{sub:3}}} \cdot \frac{d p_{\gls{sub:3}}}{d t} + \frac{d h_{\gls{sub:out}}}{d t}]
+\end{equation}\\
+
+\begin{center}
+\textit{Constitutive equations}\\
+\end{center}
+
+\begin{equation}
+vap = setState(p_{\gls{sub:3}},\gls{hbar}_{\gls{sub:3}})
+\end{equation}
+\begin{equation}
+\gls{hbar}_{\gls{sub:3}} = \frac{1}{2}(h_{\gls{sub:v}} - h_{\gls{sub:out}})
+\end{equation}
+\begin{equation}
+\frac{\partial \gls{rhobar}_{\gls{sub:3}}}{\partial \gls{hbar}_{\gls{sub:3}}}= density\_derh\_p(vap)
+\end{equation}
+\begin{equation}
+\frac{\partial \gls{rhobar}_{\gls{sub:3}}}{\partial p_{\gls{sub:3}}}= density\_derp\_h(vap)
+\end{equation}
+\begin{equation}
+\bar{T}_{\gls{sub:3}} = temperature(vap)
+\end{equation}
+\begin{equation}
+\gls{Qdot}_\text{r,3} = \pi \text{D} \gls{L}_{\gls{sub:3}} U_\text{pf,3} (T_\text{w,3} - \bar{T}_{\gls{sub:3}})
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ZONE 3 METAL WALL  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Metal wall}\\
+\begin{center}
+\textit{Conservation equations}
+\end{center}
+Energy balance:
+\begin{equation}
+C_\text{w}\frac{M_\text{tot}}{L} \cdot [ \gls{L}_{\gls{sub:3}} \cdot  \frac{d \text{T}_\text{w,3}}{d t} + (\text{T}_\text{w,23} - \text{T}_\text{w,3})  (\frac{d \gls{L}_{\gls{sub:1}}}{d t} + \frac{d \gls{L}_{\gls{sub:2}}}{d t})]= \gls{Qdot}_\text{sf,3} - \gls{Qdot}_\text{r,3}
+\end{equation}
+
+\begin{center}
+\textit{Constitutive equations}
+\end{center}
+
+\begin{equation}
+\text{T}_\text{w,23} = \frac{   \text{T}_\text{w,3} \gls{L}_{\gls{sub:2}}  + \text{T}_\text{w,2}\gls{L}_{\gls{sub:3}}      }{  \gls{L}_{\gls{sub:2}} + \gls{L}_{\gls{sub:3}}         } 
+\end{equation}

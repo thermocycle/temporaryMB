@@ -29,7 +29,12 @@
 \newcommand{\Wo}{\ensuremath{\operatorname{Wo}}}  % Womersley
 %
 \newcommand{\Gz}{\ensuremath{\operatorname{Gz}}}  % Graetz
-% 
+% Command for saturated liquid and vapor condition of enthalpy and density
+\newcommand{\rhop}{\ensuremath{\rho^\prime}}
+\newcommand{\rhopp}{\ensuremath{\rho^{\prime\prime}}}
+\newcommand{\hp}{\ensuremath{h^\prime}}
+\newcommand{\hpp}{\ensuremath{h^{\prime\prime}}}
+
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Other things
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -66,7 +71,7 @@
 \newglossaryentry{U}{name={\ensuremath{U}},description={Heat transfer coefficient (\si{\watt\per\square\metre\per\kelvin})}}
 \newglossaryentry{v}{name={\ensuremath{v}},description={Velocity (\si{\metre\per\second})}}
 \newglossaryentry{c}{name={\ensuremath{c}},description={Specific heat capacity (\si{\joule\per\kilo\gram\per\kelvin})}}
-\newglossaryentry{A}{name={\ensuremath{A}},description={Area (\si{\square\metre})}}
+\newglossaryentry{A}{name={\ensuremath{A}},description={Cross Sectional Area (\si{\square\metre})}}
 \newglossaryentry{m}{name={\ensuremath{m}},description={Mass (\si{\kilo\gram})}}
 \newglossaryentry{t}{name={\ensuremath{t}},description={Time (\si{\second})}}
 \newglossaryentry{Q}{name={\ensuremath{Q}},description={Heat (\si{\joule})}}
@@ -78,7 +83,7 @@
 \newglossaryentry{h}{name={\ensuremath{h}},description={Specific enthalpy (\si{\joule\per\kilo\gram})}}
 \newglossaryentry{T}{name={\ensuremath{T}},description={Temperature (\si{\kelvin})}}
 \newglossaryentry{p}{name={\ensuremath{p}},description={Pressure (\si{\pascal})}}
-
+\newglossaryentry{ll}{name={\ensuremath{l}},description={Length of a zone (\si{\metre})}}
 \newglossaryentry{hbar}{name={\ensuremath{\bar{h}}},description={Average specific enthalpy (\si{\joule\per\kilo\gram})}}
 \newglossaryentry{Tbar}{name={\ensuremath{\bar{T}}},description={Average temperature (\si{\kelvin})}}
 
@@ -87,15 +92,18 @@
 \newglossaryentry{rho}{type=greeksymbols,name={\ensuremath{\rho}},sort=rho,description={Density of a material or medium (\si{\kilo\gram\per\cubic\metre})}}
 \newglossaryentry{rhobar}{type=greeksymbols,name={\ensuremath{\bar{\rho}}},sort=rho,description={Average density (\si{\kilo\gram\per\cubic\metre})}}
 
+
 \newglossaryentry{lambda}{type=greeksymbols,name={\ensuremath{\lambda}},sort=lambda,description={Thermal conductivity (\si{\watt\per\metre\per\kelvin})}}
 \newglossaryentry{mu}{type=greeksymbols,name={\ensuremath{\mu}},sort=mu,description={Dynamic viscosity (\si{\pascal\second})}}
 \newglossaryentry{alpha}{type=greeksymbols,name={\ensuremath{\alpha}},sort=alpha,description={Void fraction}}
 \newglossaryentry{alphabar}{type=greeksymbols,name={\ensuremath{\bar{\alpha}}},sort=alpha,description={Average void fraction (ND)}}
 
-% and subscripts
+% and subscripts and superscript
 \newglossaryentry{sub:p}{type=subscripts,name={\ensuremath{p}},description={at constant pressure}}
 \newglossaryentry{sub:l}{type=subscripts,name={\ensuremath{\text{l}}},description={saturated liquid}}
 \newglossaryentry{sub:v}{type=subscripts,name={\ensuremath{\text{v}}},description={saturated vapour}}
+\newglossaryentry{sub:w}{type=subscripts,name={\ensuremath{\text{w}}},description={Metal wall}}
+
 
 \newglossaryentry{sub:1}{type=subscripts,name={\ensuremath{1}},description={in zone 1}}
 \newglossaryentry{sub:2}{type=subscripts,name={\ensuremath{2}},description={in zone 2}}
@@ -108,7 +116,8 @@
 
 \newglossaryentry{sub:pf}{type=subscripts,name={\ensuremath{\text{pf}}},description={primary fluid}}
 \newglossaryentry{sub:sf}{type=subscripts,name={\ensuremath{\text{sf}}},description={secondary fluid}}
-
+\newglossaryentry{sub:a}{type=subscripts,name={\ensuremath{a}},description={control volume inlet}}
+\newglossaryentry{sub:b}{type=subscripts,name={\ensuremath{b}},description={control volume outlet}}
 
 % Then we define some acronyms 
 \newacronym{MB}{MB}{moving boundary}
