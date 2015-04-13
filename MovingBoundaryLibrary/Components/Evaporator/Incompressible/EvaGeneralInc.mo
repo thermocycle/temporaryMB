@@ -1,0 +1,150 @@
+within MovingBoundaryLibrary.Components.Evaporator.Incompressible;
+model EvaGeneralInc
+ replaceable package Medium =
+      ExternalMedia.Examples.WaterCoolProp constrainedby
+    Modelica.Media.Interfaces.PartialMedium
+                                           annotation (choicesAllMatching=true);
+
+/* Components */
+  Cells.OnePhaseInc volumeSC(
+    redeclare final package Medium = Medium,
+    pstart=pstart,
+    hstart=hstartSC,
+    lstart=lstartSC,
+    Mdotnom=Mdotnom,
+    Unom=UnomSC,
+    AA=AA,
+    alone=false,
+    YY=YY,
+    eps_NTU=eps_NTU,
+    Ltotal=Ltotal,
+    subcooled=true)
+    annotation (Placement(transformation(extent={{-48,-10},{-28,10}})));
+  Cells.TwoPhase volumeTP(
+    redeclare final package Medium = Medium,
+    pstart=pstart,
+    hstart=hstartTP,
+    lstart=lstartTP,
+    Mdotnom=Mdotnom,
+    Unom=UnomTP,
+    AA=AA,
+    alone=false,
+    YY=YY,
+    Ltotal=Ltotal,
+    General=true,
+    Flooded=true,
+    VoidFraction=VoidFraction,
+    VoidF=VoidF)
+    annotation (Placement(transformation(extent={{6,-12},{26,8}})));
+  ThermoCycle.Interfaces.Fluid.FlangeA InFlow(redeclare final package Medium =
+               Medium)
+    annotation (Placement(transformation(extent={{-112,-8},{-92,12}})));
+  ThermoCycle.Interfaces.Fluid.FlangeB OutFlow(  redeclare final package Medium
+      =                                                                           Medium)
+    annotation (Placement(transformation(extent={{88,-8},{108,12}})));
+  Cells.OnePhaseInc volumeSH(
+    redeclare final package Medium = Medium,
+    AA=AA,
+    Mdotnom=Mdotnom,
+    Unom=UnomSH,
+    pstart=pstart,
+    hstart=hstartSH,
+    lstart=lstartSH,
+    subcooled=false,
+    alone=false,
+    YY=YY,
+    Ltotal=Ltotal,
+    eps_NTU=eps_NTU) annotation (Placement(transformation(extent={{48,-12},{68,8}})));
+
+  Interfaces.MbOut mbOut[nCV] annotation (Placement(transformation(extent={{-10,80},{10,100}})));
+
+import MovingBoundaryLibrary.Records;
+final parameter Integer  nCV= 3;
+/* Parameters */
+parameter Modelica.SIunits.Length Ltotal=500
+    "Total length of the heat exchanger";
+parameter Modelica.SIunits.Area AA = 0.0019 "Channel cross section";
+parameter Modelica.SIunits.Length YY "Channel perimeter";
+
+parameter Boolean VoidFraction = true
+    "Set to true to calculate the void fraction to false to keep it constant";
+parameter Real VoidF = 0.8 "Constantat void fraction" annotation (Dialog(enable= not VoidFraction));
+
+/* Heat transfer */
+parameter Boolean eps_NTU = false "Set to true for eps-NTU heat transfer" annotation (Dialog(group = "Heat transfer"));
+parameter Modelica.SIunits.MassFlowRate Mdotnom=0.5 "Nominal fluid flow rate"
+                              annotation (Dialog(group = "Heat transfer"));
+parameter Modelica.SIunits.CoefficientOfHeatTransfer   UnomSC=2500 annotation (Dialog(group = "Heat transfer"));
+parameter Modelica.SIunits.CoefficientOfHeatTransfer   UnomTP=9000 annotation (Dialog(group = "Heat transfer"));
+parameter Modelica.SIunits.CoefficientOfHeatTransfer   UnomSH=3000 annotation (Dialog(group = "Heat transfer"));
+
+/* Initial values */
+parameter Modelica.SIunits.Pressure pstart=6e6 "Fluid pressure start value"
+    annotation (Dialog(tab="Initialization"));
+parameter Modelica.SIunits.Length lstartSC=1 "SC:Start value of length"
+    annotation (Dialog(tab="Initialization"));
+parameter Modelica.SIunits.Length lstartTP=1 "TP:Start value of length"
+    annotation (Dialog(tab="Initialization"));
+parameter Modelica.SIunits.Length lstartSH=1 "SH:Start value of length"
+    annotation (Dialog(tab="Initialization"));
+
+parameter Medium.SpecificEnthalpy hstartSC=1E5 "SC: Start value of enthalpy"
+    annotation (Dialog(tab="Initialization"));
+parameter Medium.SpecificEnthalpy hstartTP=1E5 "TP: Start value of enthalpy"
+    annotation (Dialog(tab="Initialization"));
+parameter Medium.SpecificEnthalpy hstartSH=1E5 "TP: Start value of enthalpy"
+    annotation (Dialog(tab="Initialization"));
+
+ // Final Modelica.SIunits.Length L[nCV];
+  Records.Mode mode[nCV];
+
+equation
+  volumeSC.mode = mode[nCV-2];
+  volumeTP.mode = mode[nCV-1];
+  volumeSH.mode = mode[nCV];
+
+ mode[nCV-2] = Constants.ModeCompound;
+ mode[nCV-1] = Constants.ModeCompound;
+ mode[nCV] = Constants.ModeCompound;
+  /* Geometric constraints */
+  volumeSC.ll + volumeTP.ll + volumeSH.ll = Ltotal;
+  volumeSC.la = 0;
+
+   volumeSC.lb = volumeTP.la;
+   volumeTP.lb = volumeSH.la;
+
+initial equation
+
+equation
+  connect(InFlow, volumeSC.inFlow) annotation (Line(
+      points={{-102,2},{-76,2},{-76,0},{-48,0}},
+      color={0,0,255},
+      smooth=Smooth.None));
+
+  connect(volumeSC.outFlow, volumeTP.inFlow) annotation (Line(
+      points={{-28,0.1},{-8,0.1},{-8,-2},{6,-2}},
+      color={0,0,255},
+      smooth=Smooth.None));
+  connect(volumeSC.mbOut, mbOut[1]) annotation (Line(
+      points={{-38,9},{-38,20},{-8,20},{-8,83.3333},{0,83.3333}},
+      color={0,0,0},
+      smooth=Smooth.None));
+  connect(volumeTP.mbOut, mbOut[2]) annotation (Line(
+      points={{16,7},{16,24},{0,24},{0,90}},
+      color={0,0,0},
+      smooth=Smooth.None));
+  connect(volumeTP.outFlow,volumeSH. inFlow) annotation (Line(
+      points={{26,-1.9},{34,-1.9},{34,-2},{48,-2}},
+      color={0,0,255},
+      smooth=Smooth.None));
+  connect(volumeSH.outFlow,OutFlow)  annotation (Line(
+      points={{68,-1.9},{80,-1.9},{80,2},{98,2}},
+      color={0,0,255},
+      smooth=Smooth.None));
+  connect(volumeSH.mbOut, mbOut[3]) annotation (Line(
+      points={{58,7},{58,34},{10,34},{10,96.6667},{0,96.6667}},
+      color={0,0,0},
+      smooth=Smooth.None));
+  annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,
+            -100},{100,100}}), graphics));
+end EvaGeneralInc;
