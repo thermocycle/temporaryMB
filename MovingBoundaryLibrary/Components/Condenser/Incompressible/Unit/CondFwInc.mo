@@ -39,11 +39,12 @@ replaceable package Medium =
     DTstart=DTstartsf,
     eps_NTU=epsNTU_sf)
     annotation (Placement(transformation(extent={{-34,60},{30,100}})));
-  MovingBoundaryLibrary.Components.Wall.wall2volumes Wall(
+  MovingBoundaryLibrary.Components.Wall.wall Wall(
     cp_w=cpw,
     L_total=Ltotal,
     M_w=Mw,
-    TstartWall=TstartWall)
+    TstartWall=TstartWall,
+    n=2)
     annotation (Placement(transformation(extent={{-18,-24},{22,24}})));
   ThermoCycle.Interfaces.Fluid.Flange_Cdot InFlowSF
     annotation (Placement(transformation(extent={{84,70},{104,90}})));
@@ -135,6 +136,19 @@ if SteadyStatePF then
   if Set_h_pf_out then
     CondFlooded.volumeSC.h_b = h_pf_out;
   end if;
+public
+  record SummaryClass
+    replaceable Arrays T_profile;
+     record Arrays
+     Modelica.SIunits.Temperature[6] Twf;
+     Modelica.SIunits.Temperature[6] Tw;
+     Modelica.SIunits.Temperature[6] Tsf;
+     end Arrays;
+     Modelica.SIunits.Length[6] l_cell;
+     Modelica.SIunits.Power Qwf;
+     Modelica.SIunits.Power Qsf;
+  end SummaryClass;
+  SummaryClass Summary(T_profile(Twf = CondFlooded.Summary.T_profile.T_cell[:],Tw= Wall.Summary.T_profile.T_cell[:], Tsf = secondaryFluid.Summary.T_profile.T_cell[:]),l_cell = CondFlooded.Summary.l_cell[:],Qwf = CondFlooded.Summary.Qtot,Qsf = secondaryFluid.Summary.Qtot);
 
 equation
   connect(Wall.QmbIn, CondFlooded.mbOut) annotation (Line(

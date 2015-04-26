@@ -22,11 +22,12 @@ replaceable package Medium =
     annotation (Placement(transformation(extent={{-34,60},{30,100}})));
   ThermoCycle.Interfaces.Fluid.Flange_Cdot InFlowSF
     annotation (Placement(transformation(extent={{86,50},{106,70}})));
-MovingBoundaryLibrary.Components.Wall.wall2volumes_1 Wall(
+MovingBoundaryLibrary.Components.Wall.wall Wall(
     L_total=Ltotal,
     cp_w=cpw,
     M_w=Mw,
-    TstartWall=TstartWall)
+    TstartWall=TstartWall,
+    n=1)
     annotation (Placement(transformation(extent={{-18,-24},{20,20}})));
   MovingBoundaryLibrary.Components.Cells.TwoPhase TwoPhase(
     redeclare package Medium = Medium,

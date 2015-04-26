@@ -2,14 +2,6 @@ within MovingBoundaryLibrary;
 package Spline 
 
 
-
-
-
-
-
-
-
-
   annotation (
     preferedView="info",
     Documentation(info="<html>

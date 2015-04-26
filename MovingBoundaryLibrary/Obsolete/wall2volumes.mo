@@ -1,4 +1,4 @@
-within MovingBoundaryLibrary.Components.Wall;
+within MovingBoundaryLibrary.Obsolete;
 model wall2volumes
   import Modelica.Constants;
 

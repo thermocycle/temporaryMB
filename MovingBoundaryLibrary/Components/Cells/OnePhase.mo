@@ -52,6 +52,9 @@ parameter Boolean alone = true annotation (choices(checkBox=true),Dialog( group=
 parameter Boolean subcooled = true "Set to true if cell is subcooled" annotation (Dialog(group = "CV"));
 
  /***************  VARIABLES ******************/
+ /* Summary Class variables */
+ Modelica.SIunits.Temperature[3] Temp "Fluid temperature for SummaryClass";
+ Modelica.SIunits.Length[3] length "Length vector for summaryClass";
   /* Geometry */
   Modelica.SIunits.Length ll(start=lstart,min= Modelica.Constants.small)
     "Lenght of this segment";
@@ -249,6 +252,25 @@ mbOut.Cdot = C_dot;
   outFlow.Xi_outflow = inStream(inFlow.Xi_outflow);
   inFlow.C_outflow  = inStream(outFlow.C_outflow);
   outFlow.C_outflow = inStream(inFlow.C_outflow);
+
+/* Define Temp and length values for summaryClass */
+  Temp[1] = T_a;
+  Temp[2] = TT;
+  Temp[3] = T_b;
+  length[1] = la;
+  length[2] = ll/2;
+  length[3] = lb;
+public
+  record SummaryClass
+    replaceable Arrays T_profile;
+     record Arrays
+     Modelica.SIunits.Temperature[3] T_cell;
+     Modelica.SIunits.Length[3] l_cell;
+     end Arrays;
+     Modelica.SIunits.Power Q_flow;
+  end SummaryClass;
+  SummaryClass Summary(T_profile(T_cell = Temp[:],l_cell = length[:]),Q_flow=q_dot);
+
 initial equation
   if alone then
     ll = Ltotal;

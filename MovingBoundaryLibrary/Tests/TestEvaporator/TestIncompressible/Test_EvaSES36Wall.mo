@@ -54,10 +54,11 @@ parameter Boolean counterCurrent = true;
     rho=937.952)
     annotation (Placement(transformation(extent={{-40,80},{-20,100}})));
 
-  Components.Wall.wall3volumes wall3volumes(
+  Components.Wall.wall wall3volumes(
     cp_w=500,
     L_total=66.6,
     M_w=69,
+    n=3,
     TstartWall={393.15,393.15,393.15}) annotation (Placement(transformation(extent={{-10,0},{10,20}})));
 initial equation
  //evaGeneral.volumeSH.h_b = h0;

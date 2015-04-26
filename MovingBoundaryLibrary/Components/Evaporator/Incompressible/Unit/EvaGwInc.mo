@@ -44,7 +44,7 @@ annotation (choicesAllMatching = true);
   ThermoCycle.Interfaces.Fluid.Flange_Cdot
     InFlowSF annotation (Placement(
         transformation(extent={{88,50},{108,70}})));
-MovingBoundaryLibrary.Components.Wall.wall3volumes Wall(
+MovingBoundaryLibrary.Components.Wall.wall Wall(
     cp_w=cpw,
     L_total=Ltotal,
     M_w=Mw,

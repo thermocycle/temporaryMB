@@ -39,10 +39,11 @@ model Test_DryCdotWall
 
       parameter Integer n=2;
 parameter Boolean counterCurrent = true;
-  Components.Wall.wall2volumes wall2volumesCdot(
+  Components.Wall.wall wall2volumesCdot(
     cp_w=500,
     L_total=500,
     M_w=90,
+    n=2,
     TstartWall={573.15,573.15}) annotation (Placement(transformation(extent={{-10,-30},{10,-10}})));
 equation
 

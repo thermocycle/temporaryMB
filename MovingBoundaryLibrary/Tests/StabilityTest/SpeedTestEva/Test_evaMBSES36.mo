@@ -94,7 +94,7 @@ replaceable package Medium =
 //  der(dU) = dUdt_tot;
 //  der(dM) = dMdt_tot;
 //
-//  Q_tot = evaG.evaGeneral.volumeSC.q_dot + evaG.evaGeneral.volumeTP.q_dot;
+//  Q_tot = evaG.evaGeneral.volumeSC.q_dot + evaG.evaGeneral.volumeTP.q_dot + evaG.evaGeneral.volumeSH.q_dot;
 //  der(E_ext_tot) = Q_tot;
 //
 //  /* Outlet variables value */

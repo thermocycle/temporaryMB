@@ -37,11 +37,12 @@ replaceable package Medium =
     DTstart=DTstartsf,
     eps_NTU=epsNTU_sf)
     annotation (Placement(transformation(extent={{-34,60},{30,100}})));
-  MovingBoundaryLibrary.Components.Wall.wall2volumes Wall(
+  MovingBoundaryLibrary.Components.Wall.wall Wall(
     cp_w=cpw,
     L_total=Ltotal,
     M_w=Mw,
-    TstartWall=TstartWall)
+    TstartWall=TstartWall,
+    n=2)
     annotation (Placement(transformation(extent={{-18,-24},{22,24}})));
   ThermoCycle.Interfaces.Fluid.Flange_Cdot InFlowSF
     annotation (Placement(transformation(extent={{84,70},{104,90}})));

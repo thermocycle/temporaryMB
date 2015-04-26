@@ -42,10 +42,11 @@ model Test_FloodedWall
     annotation (Placement(transformation(extent={{70,-20},{90,0}})));
     parameter Integer n=2;
 parameter Boolean counterCurrent = true;
-  Components.Wall.wall2volumes wall2volumes(
+  Components.Wall.wall wall2volumes(
     L_total=500,
     M_w=80,
     cp_w=500,
+    n=2,
     TstartWall={513.15,513.15}) annotation (Placement(transformation(extent={{-10,12},{10,32}})));
 equation
 

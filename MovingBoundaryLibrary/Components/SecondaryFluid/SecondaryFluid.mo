@@ -38,10 +38,11 @@ Real epsilon[n] "Epsilon Sub-cooled secondary fluid - wall Side";
 Real NTU[n] "NTU Sub-cooled secondary fluid-Wall side";
 Real Cdot_wf[n] "Thermal energy capacity rate of the working fluid [J/k]";
 Real  Cdot_sf "Thermal energy capacity rate of the secondary fluid [J/k]";
-
+/* Variable for the summary case */
+Modelica.SIunits.Temperature Temp[n*3] "Fluid temperature for SummaryClass";
+Modelica.SIunits.Power qtot "Total thermal energy transfer from/into the fluid";
 equation
   /* Cell One */
-
   Cdot_sf = Mdot_sf*cp_sf;
   if eps_NTU then
   for i in 1:n loop
@@ -64,7 +65,16 @@ equation
    T_sfB[i] = T_sfA[i+1];
  end for;
 
-  /* Cell One - Cell Two */
+  /* Equations to set variables for the Summary*/
+  if n == 1 then
+ Temp = {T_sfA[1],T_sf[1],T_sfB[1]};
+  elseif n == 2 then
+    Temp = {T_sfA[1],T_sf[1],T_sfB[1],T_sfA[2],T_sf[2],T_sfB[2]};
+  else
+    Temp = {T_sfA[1],T_sf[1],T_sfB[1],T_sfA[2],T_sf[2],T_sfB[2],T_sfA[3],T_sf[3],T_sfB[3]};
+  end if;
+
+  qtot = sum(Qsf[:]);
 
 /* Connector */
 InFlow_sf.cp = cp_sf;
@@ -74,8 +84,19 @@ InFlow_sf.T = T_sfA[1];
 
   mbIn.Q_flow = -Qsf;
   mbIn.Cdot = Cdot_wf;
- // mbIn[2].Q_flow = -Qsf[1];
 
+public
+  record SummaryClass
+    replaceable Arrays T_profile;
+     record Arrays
+       parameter Integer n;
+     Modelica.SIunits.Temperature[n*3] T_cell;
+     end Arrays;
+     parameter Integer n;
+     Modelica.SIunits.Power[n] Qflow;
+     Modelica.SIunits.Power Qtot;
+  end SummaryClass;
+  SummaryClass Summary(T_profile(n=n,T_cell = Temp[:]),n=n, Qflow = Qsf[:], Qtot = qtot);
   annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,
             -100},{100,100}}), graphics));
 end SecondaryFluid;

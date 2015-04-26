@@ -95,8 +95,12 @@ parameter Medium.SpecificEnthalpy hstartTP=1E5 "TP: Start value of enthalpy"
 parameter Medium.SpecificEnthalpy hstartSH=1E5 "TP: Start value of enthalpy"
     annotation (Dialog(tab="Initialization"));
 
- // Final Modelica.SIunits.Length L[nCV];
-  Records.Mode mode[nCV];
+Records.Mode mode[nCV];
+/* Summary Class variables */
+  Modelica.SIunits.Temperature[9] Temp;
+  Modelica.SIunits.Length[9] length;
+  Modelica.SIunits.Power[nCV] q_dot;
+  Modelica.SIunits.Power qtot;
 
 equation
   volumeSC.mode = mode[nCV-2];
@@ -113,7 +117,35 @@ equation
    volumeSC.lb = volumeTP.la;
    volumeTP.lb = volumeSH.la;
 
-initial equation
+  /* Equations for  SummaryClass variables*/
+for i in 1:3 loop
+  Temp[i] =  volumeSC.Temp[i];
+  length[i] = volumeSC.length[i];
+end for;
+for i in 4:6 loop
+  Temp[i] =  volumeTP.Temp[i-3];
+  length[i] = volumeTP.length[i-3];
+end for;
+  for i in 7:9 loop
+   Temp[i] = volumeSH.Temp[i-6];
+   length[i] = volumeSH.length[i-6];
+  end for;
+
+   q_dot[1] = volumeSC.q_dot;
+   q_dot[2] = volumeTP.q_dot;
+   q_dot[3] = volumeSH.q_dot;
+   qtot = sum(q_dot[:]);
+public
+  record SummaryClass
+    replaceable Arrays T_profile;
+     record Arrays
+     Modelica.SIunits.Temperature[9] T_cell;
+     end Arrays;
+     Modelica.SIunits.Length[9] l_cell;
+     Modelica.SIunits.Power[3] Qflow;
+     Modelica.SIunits.Power Qtot;
+  end SummaryClass;
+  SummaryClass Summary(T_profile(T_cell = Temp[:]),l_cell = length[:],Qflow=q_dot[:],Qtot=qtot);
 
 equation
   connect(InFlow, volumeSC.inFlow) annotation (Line(

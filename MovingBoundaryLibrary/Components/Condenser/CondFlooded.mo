@@ -79,7 +79,11 @@ parameter Boolean eps_NTU = false "Set to true for eps-NTU heat transfer" annota
     annotation (Dialog(tab="Initialization"));
 
   Records.Mode mode[nCV];
-
+   /* Summary Class variables */
+  Modelica.SIunits.Temperature[6] Temp;
+  Modelica.SIunits.Length[6] length;
+  Modelica.SIunits.Power[nCV] q_dot;
+  Modelica.SIunits.Power qtot;
   Interfaces.MbOut mbOut[nCV] annotation (Placement(transformation(extent={{-10,80},{10,100}})));
 equation
   volumeSC.mode = mode[nCV-1];
@@ -91,12 +95,31 @@ equation
   volumeSC.ll + volumeTP.ll = Ltotal;
   volumeSC.la = 0;
   volumeSC.lb = volumeTP.la;
-
-initial equation
-// der(volumeSC.ll) = 0;
+  /* Equations for  SummaryClass variables*/
+for i in 1:3 loop
+  Temp[i] =  volumeTP.Temp[i];
+  length[i] = volumeTP.length[i];
+  end for;
+  for i in 4:6 loop
+   Temp[i] = volumeSC.Temp[i-3];
+   length[i] = volumeSC.length[i-3];
+  end for;
+   q_dot[1] = volumeTP.q_dot;
+   q_dot[2] = volumeSC.q_dot;
+   qtot = sum(q_dot[:]);
+public
+  record SummaryClass
+    replaceable Arrays T_profile;
+     record Arrays
+     Modelica.SIunits.Temperature[6] T_cell;
+     end Arrays;
+     Modelica.SIunits.Length[6] l_cell;
+     Modelica.SIunits.Power[2] Qflow;
+     Modelica.SIunits.Power Qtot;
+  end SummaryClass;
+  SummaryClass Summary(T_profile(T_cell = Temp[:]),l_cell = length[:],Qflow=q_dot[:],Qtot=qtot);
 
 equation
-
   connect(InFlow, volumeTP.inFlow) annotation (Line(
       points={{-102,2},{-42,2}},
       color={0,0,255},

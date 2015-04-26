@@ -38,10 +38,11 @@ parameter Modelica.SIunits.SpecificEnthalpy h0 = Medium.specificEnthalpy(stateOu
 
 parameter Integer n=3;
 parameter Boolean counterCurrent = true;
-  Components.Wall.wall3volumes wall3volumes(
+  Components.Wall.wall wall3volumes(
     cp_w=500,
     L_total=500,
     M_w=80,
+    n=3,
     TstartWall={513.15,513.15,673.15}) annotation (Placement(transformation(extent={{-10,0},{10,20}})));
 initial equation
  //evaGeneral.volumeSH.h_b = h0;

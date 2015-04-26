@@ -38,10 +38,11 @@ parameter Boolean counterCurrent = true;
         1273.15)
     annotation (Placement(transformation(extent={{-40,80},{-20,100}})));
 
-  Components.Wall.wall3volumes wall3volumes(
+  Components.Wall.wall wall3volumes(
     cp_w=500,
     L_total=500,
     M_w=80,
+    n=3,
     TstartWall={513.15,513.15,673.15}) annotation (Placement(transformation(extent={{-10,-6},
             {10,14}})));
 initial equation

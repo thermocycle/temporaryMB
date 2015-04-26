@@ -32,9 +32,9 @@ import MovingBoundaryLibrary.Constants;
   parameter Modelica.SIunits.Length YY "Channel perimeter";
   parameter Real Ltotal = 40 "Hx total length";
 
-   parameter Boolean VoidFraction = true
+  parameter Boolean VoidFraction = true
     "Set to true to calculate the void fraction to false to keep it constant";
- parameter Real VoidF = 0.8 "Constantat void fraction" annotation (Dialog(enable= not VoidFraction));
+  parameter Real VoidF = 0.8 "Constantat void fraction" annotation (Dialog(enable= not VoidFraction));
 
   parameter Modelica.SIunits.MassFlowRate Mdotnom "Nominal fluid flow rate" annotation (Dialog(group = "Heat transfer"));
   parameter Modelica.SIunits.CoefficientOfHeatTransfer Unom
@@ -42,7 +42,7 @@ import MovingBoundaryLibrary.Constants;
 
   final parameter Integer nXi = Medium.nXi "mass fraction";
  /************ FLUID INITIAL VALUES ***************/
-parameter Modelica.SIunits.Pressure pstart "Fluid pressure start value"
+  parameter Modelica.SIunits.Pressure pstart "Fluid pressure start value"
                                      annotation (Dialog(tab="Initialization"));
   parameter Medium.SpecificEnthalpy hstart=1E5 "Start value of enthalpy"
     annotation (Dialog(tab="Initialization"));
@@ -56,6 +56,9 @@ parameter Boolean General = false "Set to true if complete evaporator"
                                                                       annotation (Dialog(group = "CV"));
 
 /***************  VARIABLES ******************/
+ /* Summary Class variables */
+ Modelica.SIunits.Temperature[3] Temp "Fluid temperature for SummaryClass";
+ Modelica.SIunits.Length[3] length "Length vector for summaryClass";
 
   Modelica.SIunits.Length ll(start=lstart,min= Modelica.Constants.small);
   Modelica.SIunits.Length la;
@@ -321,6 +324,23 @@ mbOut.Cdot = C_dot;
   outFlow.Xi_outflow = inStream(inFlow.Xi_outflow);
   inFlow.C_outflow  = inStream(outFlow.C_outflow);
   outFlow.C_outflow = inStream(inFlow.C_outflow);
+/* Define Temp and length values for summaryClass */
+  Temp[1] = T_a;
+  Temp[2] = TT;
+  Temp[3] = T_b;
+  length[1] = la;
+  length[2] = ll/2;
+  length[3] = lb;
+public
+  record SummaryClass
+    replaceable Arrays T_profile;
+     record Arrays
+     Modelica.SIunits.Temperature[3] T_cell;
+     Modelica.SIunits.Length[3] l_cell;
+     end Arrays;
+     Modelica.SIunits.Power Q_flow;
+  end SummaryClass;
+  SummaryClass Summary(T_profile(T_cell = Temp[:],l_cell = length[:]),Q_flow= q_dot);
 
   annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,
             -100},{100,100}}),
